@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="lofi-frontend/lofi-frontend.Client/lofi-frontend.Client.csproj" />
+  <Project Path="lofi-frontend/lofi-frontend/lofi-frontend.csproj" />
+</Solution>
