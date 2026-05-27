@@ -1,0 +1,42 @@
+﻿@using lofi_frontend.Models
+@page "/Login"
+@rendermode InteractiveServer
+
+<div class="Login-Form-Box">
+    <h3>Login to your account</h3>
+    <EditForm Model="user">
+        <div class="Form-Group">
+            <label>User Name</label>
+            <InputText @bind-Value="user.Username" class="input-group" />
+            <ValidationMessage For="@(() => user.Username)" />
+        </div>
+        <div class="Form-Group">
+            <label>Password</label>
+            <InputText @bind-Value="user.Password" class="input-group" type="password" />
+            <ValidationMessage For="@(() => user.Password)" />
+        </div>
+
+        <button class="Submit-Button" type="submit" @onclick="Submit">Submit</button>
+        <button class="Google-Login-Button" type="button">Login with Google</button>
+        <button class="Account-Button" type="button" @onclick="CreateAccount">Create an account</button>
+        @* <div class="g-signin2" data-onsuccess="onSignIn"></div> *@
+
+    </EditForm>
+</div>
+
+
+@code {
+    [Parameter]
+    public User user { get; set; } = new User();
+
+    public void CreateAccount()
+    {
+        // Logic to create an account
+    }
+
+    public void Submit()
+    {
+        // Logic to submit the form
+    }
+
+}
