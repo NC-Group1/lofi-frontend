@@ -13,8 +13,11 @@ namespace lofi_frontend.Models
         [Required(ErrorMessage = "Please Enter Your Email")]
         public string Email { get; set; } = "";
 
-        [Required(ErrorMessage = "Please Enter Your Username")]
+        [Required(ErrorMessage = "Please Enter A Username")]
         public string Username { get; set; } = "";
+
+        [Required(ErrorMessage = "Please Enter Your Password")]
+        public string Password { get; set; } = "";
 
         [Required]
         public int Age { get; set; } = 0;
@@ -26,7 +29,8 @@ namespace lofi_frontend.Models
 
     public class UserLogin
     {
-        public User User { get; set; }
+        [Required(ErrorMessage = "Please Enter Your Username")]
+        public string Username { get; set; } = "";
         [Required(ErrorMessage = "Please Enter Your Password")]
         public string Password { get; set; } = "";
 
