@@ -12,8 +12,8 @@
         </div>
         <div class="Form-Group">
             <label>Password</label>
-            <InputText @bind-Value="user.Password" class="input-group" type="password" />
-            <ValidationMessage For="@(() => user.Password)" />
+            <InputText @bind-Value="userLogin.Password" class="input-group" type="password" />
+            <ValidationMessage For="@(() => userLogin.Password)" />
         </div>
 
         <button class="Submit-Button" type="submit" @onclick="Submit">Submit</button>
@@ -28,6 +28,8 @@
 @code {
     [Parameter]
     public User user { get; set; } = new User();
+    [Parameter]
+    public UserLogin userLogin { get; set; } = new UserLogin();
 
     public void CreateAccount()
     {

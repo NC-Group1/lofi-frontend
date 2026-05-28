@@ -16,14 +16,19 @@ namespace lofi_frontend.Models
         [Required(ErrorMessage = "Please Enter Your Username")]
         public string Username { get; set; } = "";
 
-        [Required(ErrorMessage = "Please Enter Your Password")]
-        public string Password { get; set; } = "";
-
         [Required]
         public int Age { get; set; } = 0;
 
         [Required]
         public Gender Gender { get; set; } = Gender.PreferNotToSay;
         public List<Playlist> Playlists { get; set; } = new List<Playlist>();
+    }
+
+    public class UserLogin
+    {
+        public User User { get; set; }
+        [Required(ErrorMessage = "Please Enter Your Password")]
+        public string Password { get; set; } = "";
+
     }
 }
