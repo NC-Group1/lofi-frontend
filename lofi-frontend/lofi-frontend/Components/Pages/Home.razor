@@ -1,7 +1,12 @@
 ﻿@page "/"
+@using lofi_frontend.Components.Items
+
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<YoutubePlayer VideoCode="@VideoCode"/>
 
-Welcome to your new app.
+@code {
+	public string VideoCode { get; set; } = "ZvJQt559CTY";
+}

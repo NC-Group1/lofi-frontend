@@ -1,0 +1,16 @@
+﻿<div class="embed-responsive embed-responsive-16by9">
+	<iframe 
+		class="embed-responsive-item"
+			src="@GetURL()"
+		allowfullscreen/>
+
+</div>
+@code {
+	[Parameter]
+	public string VideoCode { get; set; }
+
+	public string GetURL()
+	{
+		return $"https://www.youtube.com/embed/" + VideoCode;
+	}
+}
