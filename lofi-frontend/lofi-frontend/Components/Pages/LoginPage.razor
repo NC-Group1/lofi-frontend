@@ -1,0 +1,64 @@
+﻿@using lofi_frontend.Models
+@page "/Login"
+@rendermode InteractiveServer
+@inject HttpClient httpClient;
+@inject NavigationManager NavigationManager;
+
+
+<div class="Login-Form-Box">
+    <h3>Login to your account</h3>
+    <EditForm Model="userLogin" OnValidSubmit="AuthenticateUser" FormName="LoginForm">
+        <DataAnnotationsValidator />
+        <div class="Form-Group">
+            <label>User Name</label>
+            <InputText @bind-Value="userLogin.Username" class="input-group" />
+            <ValidationMessage For="@(() => userLogin.Username)" />
+        </div>
+        <div class="Form-Group">
+            <label>Password</label>
+            <InputText @bind-Value="userLogin.Password" class="input-group" type="password" />
+            <ValidationMessage For="@(() => userLogin.Password)" />
+        </div>
+        <div class="error-message">
+            <span class="error-text">@errorMessage</span>
+        </div>
+
+        <button class="Login-Button" type="submit">Login</button>
+        <button class="Google-Login-Button" type="button">Login with Google</button>
+        <NavLink href="@($"/Sign-up")">
+        <button class="Account-Button" type="button">Create an account</button>
+        </NavLink>
+        @* <div class="g-signin2" data-onsuccess="onSignIn"></div> *@
+
+    </EditForm>
+</div>
+
+
+@code {
+    public HttpContext? HttpContext{ get; set; }
+
+    [SupplyParameterFromForm]
+    public UserLogin userLogin { get; set; } = new UserLogin();
+
+    private string? errorMessage;
+
+    private async Task AuthenticateUser()
+    {
+
+        List<User> users = await httpClient.GetFromJsonAsync<List<User>>("/Users");
+
+        User userAccount = users?
+        .FirstOrDefault(x => x.Username == userLogin.Username);
+
+        if(userAccount == null || userAccount.Password != userLogin.Password)
+        {
+            errorMessage = "Invalid Username or password";
+            return;
+        }
+
+        NavigationManager.NavigateTo($"/User-Dashboard/{userAccount.Id}");
+    }
+
+
+
+}
