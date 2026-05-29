@@ -28,11 +28,11 @@
     }
     @if(selectedSection == "playlists")
     {
-        <PlaylistsSummary />
+        <PlaylistsSummaryList Playlists="@playlists" />
     }
     @if(selectedSection == "faveTracks")
     {
-        <FaveTracksSummary />
+        <FaveTracksSummaryList Musics="@faveTracks" />
     }
 </div>
 @if (!string.IsNullOrEmpty(errorMessage))
@@ -62,8 +62,10 @@
 
     private string selectedSection = "";
 
-    private string errorMessage;
+    private string? errorMessage;
     private List<Project> projects = new();
+    private List<Playlist> playlists = new();
+    private List<Music> faveTracks = new();
     private async Task ShowProjects()
     {
         try
@@ -83,7 +85,7 @@
         try
         {
             selectedSection = "playlists";
-            var playlists = await httpClient.GetFromJsonAsync<List<Playlist>>("/playlists");
+            playlists = await httpClient.GetFromJsonAsync<List<Playlist>>("/playlists");
             
         }
         catch (Exception ex)
@@ -96,7 +98,7 @@
         try
         {
             selectedSection = "faveTracks";
-            var faveTracks = await httpClient.GetFromJsonAsync<List<Music>>("/music");
+            faveTracks = await httpClient.GetFromJsonAsync<List<Music>>("/music");
             
         }
         catch (Exception ex)

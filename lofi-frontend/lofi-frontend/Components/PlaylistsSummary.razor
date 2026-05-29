@@ -1,13 +1,13 @@
 ﻿@using lofi_frontend.Models
 
 <div class="project-card">
-    <h3>Playlists Summary</h3>
-    <h4>@Playlists.Name</h4>
-    <h4>@Playlists.Mood</h4>
-    <h4>@Playlists.Genre</h4>
+    <h3>Playlist Summary</h3>
+    <h4>@Playlist.Name</h4>
+    <h4>@Playlist.Mood</h4>
+    <h4>@Playlist.Genre</h4>
 </div>
 
 @code {
     [Parameter]
-    public Playlist Playlists { get; set; }
+    public Playlist Playlist { get; set; } = default!;
 }

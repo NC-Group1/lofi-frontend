@@ -1,5 +1,17 @@
-﻿<h3>PlaylistsSummaryList</h3>
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Components
+
+<h3>PlaylistsSummaryList</h3>
+
+
+
+@foreach (var Playlist in Playlists)
+{
+    <PlaylistsSummary Playlist="@Playlist" />
+}
 
 @code {
+    [Parameter]
+    public List<Playlist> Playlists { get; set; } = default!;
 
 }
