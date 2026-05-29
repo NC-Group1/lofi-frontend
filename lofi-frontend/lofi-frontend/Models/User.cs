@@ -6,11 +6,15 @@ namespace lofi_frontend.Models
     public class User
     {
         public int Id { get; set; }
+        
         [Required (ErrorMessage = "Please Enter Your Firstname")]
         public string FirstName { get; set; } = "";
+        
         [Required(ErrorMessage = "Please Enter Your Lastname")]
         public string LastName { get; set; } = "";
+        
         [Required(ErrorMessage = "Please Enter Your Email")]
+        [EmailAddress]
         public string Email { get; set; } = "";
 
         [Required(ErrorMessage = "Please Enter A Username")]
