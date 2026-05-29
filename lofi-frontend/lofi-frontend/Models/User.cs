@@ -26,8 +26,8 @@ namespace lofi_frontend.Models
         public string Password { get; set; } = "";
 
         [Required]
-        [Range(13, 120, ErrorMessage = "Age must be above 13")]
-        public int Age { get; set; } = 0;
+        [DataType(DataType.DateTime)]
+        public DateTime DOB { get; set; } 
 
         [Required]
         public Gender Gender { get; set; } = Gender.PreferNotToSay;

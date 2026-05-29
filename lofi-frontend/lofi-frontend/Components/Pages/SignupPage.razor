@@ -5,14 +5,17 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager;
 @inject HttpClient httpClient;
+@using System.Text;
 
 
+<div class="signup-title-text">
+    <h1>Create your account</h1>
 
-<h1>Create your account</h1>
+</div>
 
 <div class="Signup-Form-Box">
-    <h2>Sign Up</h2>
-    <EditForm Model="user" OnValidSubmit="HandleSignup" FormName="SignupForm">
+
+    <EditForm Model="user" OnValidSubmit="HandleSignup" FormName="SignupForm" class="form-container">
         <DataAnnotationsValidator />
         <div class="Form-Group">
             <label for="firstname-input">First Name</label>
@@ -45,9 +48,9 @@
         </div>
 
         <div class="Form-Group">
-            <label for="age-input">Age</label>
-            <InputNumber id="age-input" @bind-Value="user.Age" class="input-group"/>
-            <ValidationMessage For="@(() => user.Age)" />
+            <label for="Date-of-birth">Date of Birth</label>
+            <InputDate id="Date-of-birth" @bind-Value="user.DOB" class="input-group" />
+            <ValidationMessage For="@(() => user.DOB)" />
         </div>
         <div class="Form-Group row">
             <label for="gender">Gender</label>
@@ -72,14 +75,37 @@
 
 
 @code {
-    [Parameter]
 
+    [SupplyParameterFromForm]
     public User user { get; set; } = new User();
+
     private User createdUser { get; set; } = new User();
     private bool ShowPassword { get; set; } = false;
 
+
+    private void checkSignUp()
+    {
+        Console.WriteLine($"{user.FirstName} ,{user.LastName},{user.Email},{user.Username},{user.Password},{user.DOB},{user.Gender}");
+    
+
+    }
+
     private async Task HandleSignup()
     {
+
+        // if (user.DOB != null)
+        // {
+        //     var age = DateTime.Today.Year - user.DOB.Value.Year;
+        //     if (user.DOB > DateTime.Today.AddYears(-age))
+        //         age--;
+
+        //     if (age < 13)
+        //     {
+        //         EditContext.AddValidationMessage(() => user.DOB, "You must be at least 13.");
+        //         return;
+        //     }
+        // }
+
         try
         {
             var response = await httpClient.PostAsJsonAsync(($"/{user.Id}"), createdUser);
