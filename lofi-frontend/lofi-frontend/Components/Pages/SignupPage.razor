@@ -1,0 +1,74 @@
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Models.Enum
+@page "/Signup"
+@rendermode InteractiveServer
+
+
+
+<h1>Create your account</h1>
+
+<div class="Signup-Form-Box">
+    <h2>Sign Up</h2>
+    <EditForm Model="user"  FormName="SignupForm">
+        <DataAnnotationsValidator />
+        <div class="Form-Group">
+            <label for="firstname-input">First Name</label>
+            <InputText id="firstname-input" @bind-Value="user.FirstName" class="input-group" />
+            <ValidationMessage For="@(() => user.FirstName)" />
+        </div>
+        <div class="Form-Group">
+            <label for="lastname-input">Last Name</label>
+            <InputText id="lastname-input" @bind-Value="user.LastName" class="input-group" />
+            <ValidationMessage For="@(() => user.LastName)" />
+        </div>
+        <div class="Form-Group">
+            <label for="email-input">Email</label>
+            <InputText id="email-input" @bind-Value="user.Email" class="input-group" />
+            <ValidationMessage For="@(() => user.Email)" />
+        </div>
+        <div class="Form-Group">
+            <label for="username-input">UserName</label>
+            <InputText id="username-input" @bind-Value="user.Username" class="input-group" />
+            <ValidationMessage For="@(() => user.Username)" />
+        </div>
+        <div class="Form-Group">
+            <label for="password-input">Password</label>
+            <InputText id="password-input" @bind-Value="user.Password" class="input-group" />
+            <ValidationMessage For="@(() => user.Password)" />
+        </div>
+        <div class="Form-Group">
+            <label for="age-input">Age</label>
+            <InputNumber id="age-input" @bind-Value="user.Age" class="input-group" />
+            <ValidationMessage For="@(() => user.Age)" />
+        </div>
+        <div class="Form-Group row">
+            <label for="gender">Gender</label>
+            <InputSelect @bind-Value="user.Gender" class="input-group" >
+            @foreach (var gender in Enum.GetValues(typeof(Gender)))
+            {
+                <option value="@gender">@gender</option>
+               
+            }
+            </InputSelect>
+        </div>
+
+        <NavLink href="@($"/UserDashboard")">
+            <button class="Signup-Button" type="submit">Sign Up</button>
+
+            </NavLink>
+            <h3>Already have an account?</h3>
+        <NavLink href="@($"/Login")">
+            <button class="Account-Button" type="button">Log in</button>
+        </NavLink>
+        @* <div class="g-signin2" data-onsuccess="onSignIn"></div> *@
+
+    </EditForm>
+</div>
+
+
+@code {
+    [Parameter]
+
+    public User user { get; set; } = new User();
+
+}
