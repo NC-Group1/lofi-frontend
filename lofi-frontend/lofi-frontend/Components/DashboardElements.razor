@@ -3,24 +3,25 @@
 @inject HttpClient httpClient
 @rendermode InteractiveServer
 
-
+<div class="dashboard-layout">
     
-    <div class="user-card">
-        <h2>@User.Username</h2>
-        <h3>@User.FirstName @User.LastName</h3>
-        <h4>@User.Email</h4>
-        <h4>@User.Age</h4>
-        <h4>@User.Gender</h4>
-    <NavLink href="@($"/User-Settings")">
-    <button class="user-setting-button" type="button">Account Settings</button>
-    </NavLink>
-    </div>
-<div class="sidebar-buttons">
-<button class="project-button" type="button" @onclick="ShowProjects">Projects</button>
-<button class="playlist-button" type="button" @onclick="ShowPlaylists">Playlists</button>
-<button class="fave-tracks-button" type="button" @onclick="ShowFaveTracks">Favourite Tracks</button>
+    <div class="sidebar">
+        <div class="user-card">
+            <h2>@User.Username</h2>
+            <h5>Name: @User.FirstName @User.LastName</h5>
+            <h5>Age: @User.Age</h5>
+            <h5>Gender: @User.Gender</h5>
+            <h6>Email: @User.Email</h6>
+        <NavLink href="@($"/User-Settings")">
+        <button class="user-setting-button" type="button">Account Settings</button>
+        </NavLink>
+        </div>
+        <div class="sidebar-buttons">
+        <button class="project-button" type="button" @onclick="ShowProjects">Projects</button>
+        <button class="playlist-button" type="button" @onclick="ShowPlaylists">Playlists</button>
+        <button class="fave-tracks-button" type="button" @onclick="ShowFaveTracks">Favourite Tracks</button>
+ </div>
 </div>
-
 <div class="content">
     @if(selectedSection == "projects")
     {
@@ -39,7 +40,7 @@
 {
     <p>@errorMessage</p>
 }
-
+</div>
 <p class="time-worked">Time worked: {time}</p>
 <p class="total-projects">Total projects: {no. of projects}</p>
 
