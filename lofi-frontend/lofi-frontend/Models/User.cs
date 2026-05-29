@@ -21,9 +21,12 @@ namespace lofi_frontend.Models
         public string Username { get; set; } = "";
 
         [Required(ErrorMessage = "Please Enter Your Password")]
+        [StringLength(30, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long")]
+        [DataType(DataType.Password)]
         public string Password { get; set; } = "";
 
         [Required]
+        [Range(13, 120, ErrorMessage = "Age must be above 13")]
         public int Age { get; set; } = 0;
 
         [Required]

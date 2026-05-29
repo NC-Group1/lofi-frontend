@@ -1,4 +1,5 @@
-﻿@using lofi_frontend.Models
+﻿@using System.Reflection.Metadata
+@using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
 @page "/Signup"
 @rendermode InteractiveServer
@@ -35,12 +36,17 @@
         </div>
         <div class="Form-Group">
             <label for="password-input">Password</label>
-            <InputText id="password-input" type="password" @bind-Value="user.Password" class="input-group" />
+            <InputText id="password-input" type="@(ShowPassword ? "text" : "password")" @bind-Value="user.Password" class="input-group" />
             <ValidationMessage For="@(() => user.Password)" />
         </div>
+        <div>
+            <input type="checkbox" @bind="ShowPassword"/>
+            <label for="showPassword">Show Password</label>
+        </div>
+
         <div class="Form-Group">
             <label for="age-input">Age</label>
-            <InputNumber id="age-input" @bind-Value="user.Age" class="input-group" />
+            <InputNumber id="age-input" @bind-Value="user.Age" class="input-group"/>
             <ValidationMessage For="@(() => user.Age)" />
         </div>
         <div class="Form-Group row">
@@ -70,6 +76,7 @@
 
     public User user { get; set; } = new User();
     private User createdUser { get; set; } = new User();
+    private bool ShowPassword { get; set; } = false;
 
     private async Task HandleSignup()
     {
@@ -80,6 +87,7 @@
             if(response.IsSuccessStatusCode)
             {
                 var newUser = await response.Content.ReadFromJsonAsync<User>();
+
                 NavigationManager.NavigateTo($"/UserDashboard/{createdUser.Id}");
             }
             else
