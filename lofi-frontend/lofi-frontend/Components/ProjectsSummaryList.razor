@@ -1,0 +1,14 @@
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Components
+<h3>ProjectsSummaryList</h3>
+
+@foreach(var project in Projects)
+{
+    <ProjectsSummary Project="@project" />
+}
+
+@code {
+    [Parameter]
+    public List<Project> Projects { get; set; } = default!;
+
+}

@@ -1,0 +1,108 @@
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Models.Enum
+@inject HttpClient httpClient
+@rendermode InteractiveServer
+
+
+    
+    <div class="user-card">
+        <h2>@User.Username</h2>
+        <h3>@User.FirstName @User.LastName</h3>
+        <h4>@User.Email</h4>
+        <h4>@User.Age</h4>
+        <h4>@User.Gender</h4>
+    <NavLink href="@($"/User-Settings")">
+    <button class="user-setting-button" type="button">Account Settings</button>
+    </NavLink>
+    </div>
+<div class="sidebar-buttons">
+<button class="project-button" type="button" @onclick="ShowProjects">Projects</button>
+<button class="playlist-button" type="button" @onclick="ShowPlaylists">Playlists</button>
+<button class="fave-tracks-button" type="button" @onclick="ShowFaveTracks">Favourite Tracks</button>
+</div>
+
+<div class="content">
+    @if(selectedSection == "projects")
+    {
+        <ProjectsSummaryList Projects="@projects" />
+    }
+    @if(selectedSection == "playlists")
+    {
+        <PlaylistsSummary />
+    }
+    @if(selectedSection == "faveTracks")
+    {
+        <FaveTracksSummary />
+    }
+</div>
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+<p class="time-worked">Time worked: {time}</p>
+<p class="total-projects">Total projects: {no. of projects}</p>
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+    [Parameter]
+    public User User { get; set; } = new User
+        {
+            Id = 1,
+            FirstName = "Emily",
+            LastName = "Carter",
+            Email = "emily.carter@example.com",
+            Username = "emcafe",
+            Password = "Password123!",
+            Age = 24,
+            Gender = Gender.Female,
+            Playlists = new List<Playlist>()
+        };
+
+    private string selectedSection = "";
+
+    private string errorMessage;
+    private List<Project> projects = new();
+    private async Task ShowProjects()
+    {
+        try
+        {
+            selectedSection = "projects";
+            projects = await httpClient.GetFromJsonAsync<List<Project>>("/projects");
+            
+        }
+        catch(Exception ex)
+        {
+            errorMessage = $"Could not load projects: {ex.Message}";
+        }
+
+    }
+    private async Task ShowPlaylists()
+    {
+        try
+        {
+            selectedSection = "playlists";
+            var playlists = await httpClient.GetFromJsonAsync<List<Playlist>>("/playlists");
+            
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Could not load projects: {ex.Message}";
+        }
+    }
+    private async Task ShowFaveTracks()
+    {
+        try
+        {
+            selectedSection = "faveTracks";
+            var faveTracks = await httpClient.GetFromJsonAsync<List<Music>>("/music");
+            
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Could not load projects: {ex.Message}";
+        }
+    }
+
+}

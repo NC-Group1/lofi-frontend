@@ -1,0 +1,12 @@
+﻿@using lofi_frontend.Models
+@page "/Dashboard/User/{Userid:int}"
+
+<PageTitle>User Dashboard</PageTitle>
+
+<DashboardElements />
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+
+}
