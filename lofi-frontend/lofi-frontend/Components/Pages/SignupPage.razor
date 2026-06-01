@@ -21,31 +21,32 @@
 
             <div class="mb-3">
                 <label for="firstname-input" class="form-label">First Name</label>
-                <InputText id="firstname-input" class="form-control" @bind-Value="user.FirstName" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.FirstName)" /></div>
+                <InputText id="firstname-input" class="form-control" @bind-Value="user.UserData.FirstName" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.FirstName)" /></div>
             </div>
 
             <div class="mb-3">
                 <label for="lastname-input" class="form-label">Last Name</label>
-                <InputText id="lastname-input" class="form-control" @bind-Value="user.LastName" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.LastName)" /></div>
+                <InputText id="lastname-input" class="form-control" @bind-Value="user.UserData.LastName" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.LastName)" /></div>
             </div>
 
             <div class="mb-3">
                 <label for="email-input" class="form-label">Email address</label>
-                <InputText id="email-input" type="email" class="form-control" @bind-Value="user.Email" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.Email)" /></div>
+                <InputText id="email-input" type="email" class="form-control" @bind-Value="user.UserData.Email" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Email)" /></div>
             </div>
 
             <div class="mb-3">
                 <label for="username-input" class="form-label">Username</label>
-                <InputText id="username-input" class="form-control" @bind-Value="user.Username" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.Username)" /></div>
+                <InputText id="username-input" class="form-control" @bind-Value="user.UserData.Username" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Username)" /></div>
             </div>
 
             <div class="mb-2">
                 <label for="password-input" class="form-label">Password</label>
-                <InputText id="password-input" type="@(ShowPassword ? "text" : "password")" class="form-control" @bind-Value="user.Password" />
+                <InputText id="password-input" type="@(ShowPassword ? "text" : "password")" class="form-control"
+                @bind-Value="user.Password" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.Password)" /></div>
             </div>
 
@@ -56,13 +57,13 @@
 
             <div class="mb-3">
                 <label for="Date-of-birth" class="form-label">Date of Birth</label>
-                <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.DOB" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.DOB)" /></div>
+                <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.UserData.Age" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Age)" /></div>
             </div>
 
             <div class="mb-4">
                 <label for="gender" class="form-label">Gender</label>
-                <InputSelect id="gender" class="form-select" @bind-Value="user.Gender">
+                <InputSelect id="gender" class="form-select" @bind-Value="user.UserData.Gender">
                     @foreach (var gender in Enum.GetValues(typeof(Gender)))
                     {
                         <option value="@gender">
@@ -100,7 +101,7 @@
 
 @code {
 	[SupplyParameterFromForm]
-	public User user { get; set; } = new User();
+	public UserWithPassword user { get; set; } = new();
 
 	private bool ShowPassword { get; set; } = false;
 	private EditContext? editContext;
@@ -118,15 +119,15 @@
 	{
 		validationMessageStore?.Clear();
 
-		if (user.DOB != default)
+		if (user.UserData.Age != default)
 		{
-			var age = DateTime.Today.Year - user.DOB.Year;
-			if (user.DOB > DateTime.Today.AddYears(-age))
+			var age = DateTime.Today.Year - user.UserData.Age.Year;
+			if (user.UserData.Age > DateTime.Today.AddYears(-age))
 				age--;
 
 			if (age < 13)
 			{
-				validationMessageStore?.Add(() => user.DOB, "You must be at least 13 years old.");
+				validationMessageStore?.Add(() => user.UserData.Age, "You must be at least 13 years old.");
 			}
 		}
 
@@ -137,13 +138,13 @@
 	{
 		try
 		{
-			var response = await httpClient.PostAsJsonAsync($"/{user.Id}", user);
+			var response = await httpClient.PostAsJsonAsync($"/{user.UserData.Id}", user);
 
 			if (response.IsSuccessStatusCode)
 			{
-				var newUser = await response.Content.ReadFromJsonAsync<User>();
+				var newUser = await response.Content.ReadFromJsonAsync<AuthenticatedUser>();
 
-				NavigationManager.NavigateTo($"/UserDashboard/{user.Id}");
+				NavigationManager.NavigateTo($"/UserDashboard/{user.UserData.Id}");
 			}
 			else
 			{
