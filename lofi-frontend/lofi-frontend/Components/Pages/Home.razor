@@ -5,9 +5,14 @@
 
 <PageTitle>Home</PageTitle>
 
+<div class="container-fluid d-flex flex-column gap-2 align-items-center justify-content-center">
+	<div class="flex-shrink-1">
+		<YoutubePlayer VideoCode="@VideoCode" />
+	</div>
 
-<div class="container-fluid d-flex align-items-center justify-content-center" >
-	<YoutubePlayer VideoCode="@VideoCode" />
+	<div>
+		<TaskTimerComponent />
+	</div>
 </div>
 
 @code {
