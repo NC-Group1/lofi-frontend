@@ -27,7 +27,8 @@ namespace lofi_frontend.Models
 
         [Required]
         [DataType(DataType.DateTime)]
-        public DateTime DOB { get; set; } 
+        public DateTime DOB { get; set; } = new DateTime(
+            DateTime.Now.Year - 20, DateTime.Now.Month, DateTime.Now.Day);
 
         [Required]
         public Gender Gender { get; set; } = Gender.PreferNotToSay;

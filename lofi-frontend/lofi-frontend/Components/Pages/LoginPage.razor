@@ -5,34 +5,54 @@
 @inject NavigationManager NavigationManager;
 
 
-<div class="Login-Form-Box">
-    <h3>Login to your account</h3>
-    <EditForm Model="userLogin" OnValidSubmit="AuthenticateUser" FormName="LoginForm">
-        <DataAnnotationsValidator />
-        <div class="Form-Group">
-            <label>User Name</label>
-            <InputText @bind-Value="userLogin.Username" class="input-group" />
-            <ValidationMessage For="@(() => userLogin.Username)" />
-        </div>
-        <div class="Form-Group">
-            <label>Password</label>
-            <InputText @bind-Value="userLogin.Password" class="input-group" type="password" />
-            <ValidationMessage For="@(() => userLogin.Password)" />
-        </div>
-        <div class="error-message">
-            <span class="error-text">@errorMessage</span>
-        </div>
+<div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
+    <div class="card p-4 shadow mt-5" style="width: 100%; max-width: 450px;">
 
-        <button class="Login-Button" type="submit">Login</button>
-        <button class="Google-Login-Button" type="button">Login with Google</button>
-        <NavLink href="@($"/Signup")">
-        <button class="Account-Button" type="button">Create an account</button>
-        </NavLink>
-        @* <div class="g-signin2" data-onsuccess="onSignIn"></div> *@
+        <h3 class="text-center h4 mb-4">Login to your account</h3>
 
-    </EditForm>
+        <EditForm Model="userLogin" OnValidSubmit="AuthenticateUser" FormName="LoginForm">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <InputText @bind-Value="userLogin.Username" class="form-control" />
+                <div class="text-danger small"><ValidationMessage For="@(() => userLogin.Username)" /></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <InputText @bind-Value="userLogin.Password" class="form-control" type="password" />
+                <div class="text-danger small"><ValidationMessage For="@(() => userLogin.Password)" /></div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger p-2 small text-center mb-3" role="alert">
+                    @errorMessage
+                </div>
+            }
+
+            <div class="d-grid gap-2 mb-3">
+                <button class="btn btn-primary" type="submit">Login</button>
+
+                <button class="btn btn-outline-dark" type="button">
+                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" style="width:16px; margin-right:8px; vertical-align:middle;" />
+                    Login with Google
+                </button>
+            </div>
+
+            <hr />
+
+            <div class="text-center">
+                <p class="mb-2 text-muted small">Don't have an account?</p>
+                <NavLink href="Signup" class="btn btn-outline-secondary w-100">
+                    Create an account
+                </NavLink>
+            </div>
+
+        </EditForm>
+    </div>
 </div>
-
 
 @code {
     public HttpContext? HttpContext{ get; set; }
