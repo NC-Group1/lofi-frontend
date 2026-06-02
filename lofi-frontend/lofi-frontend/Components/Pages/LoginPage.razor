@@ -1,64 +1,123 @@
-﻿@using lofi_frontend.Models
+﻿@using System.Text.Json
+@using Microsoft.AspNetCore.WebUtilities
+@using lofi_frontend.Models
 @page "/Login"
+
 @rendermode InteractiveServer
+
 @inject HttpClient httpClient;
 @inject NavigationManager NavigationManager;
 
 
-<div class="Login-Form-Box">
-    <h3>Login to your account</h3>
-    <EditForm Model="userLogin" OnValidSubmit="AuthenticateUser" FormName="LoginForm">
-        <DataAnnotationsValidator />
-        <div class="Form-Group">
-            <label>User Name</label>
-            <InputText @bind-Value="userLogin.Username" class="input-group" />
-            <ValidationMessage For="@(() => userLogin.Username)" />
-        </div>
-        <div class="Form-Group">
-            <label>Password</label>
-            <InputText @bind-Value="userLogin.Password" class="input-group" type="password" />
-            <ValidationMessage For="@(() => userLogin.Password)" />
-        </div>
-        <div class="error-message">
-            <span class="error-text">@errorMessage</span>
-        </div>
+<div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
+    <div class="card p-4 shadow mt-5" style="width: 100%; max-width: 450px;">
 
-        <button class="Login-Button" type="submit">Login</button>
-        <button class="Google-Login-Button" type="button">Login with Google</button>
-        <NavLink href="@($"/Sign-up")">
-        <button class="Account-Button" type="button">Create an account</button>
-        </NavLink>
-        @* <div class="g-signin2" data-onsuccess="onSignIn"></div> *@
+        <h3 class="text-center h4 mb-4">Login to your account</h3>
 
-    </EditForm>
+        <EditForm EditContext="editContext" OnValidSubmit="AuthenticateUser" FormName="Login Form">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <InputText @bind-Value="user.UserData.Username" class="form-control" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Username)" /></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <InputText @bind-Value="user.Password" class="form-control" type="password" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.Password)" /></div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger p-2 small text-center mb-3" role="alert">
+                    @errorMessage
+                </div>
+            }
+
+            <div class="d-grid gap-2 mb-3">
+                <button class="btn btn-primary" type="submit">Login</button>
+
+                @* <button class="btn btn-outline-dark" type="button">
+                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" style="width:16px; margin-right:8px; vertical-align:middle;" />
+                    Login with Google
+                    </button> *@
+            </div>
+
+            <hr />
+
+            <div class="text-center">
+                <p class="mb-2 text-muted small">Don't have an account?</p>
+                <NavLink href="Signup" class="btn btn-outline-secondary w-100">
+                    Create an account
+                </NavLink>
+            </div>
+
+        </EditForm>
+    </div>
 </div>
 
-
 @code {
-    public HttpContext? HttpContext{ get; set; }
+    public HttpContext? HttpContext { get; set; }
 
-    [SupplyParameterFromForm]
-    public UserLogin userLogin { get; set; } = new UserLogin();
+    public UserWithPassword user { get; set; } = new();
+
+    public EditContext? editContext { get; set; }
+
+    public List<AuthenticatedUser>? users { get; set; } = [];
 
     private string? errorMessage;
 
+    protected override void OnInitialized()
+    {
+        user ??= new();
+        editContext = new EditContext(user);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (user == null)
+        {
+            user = new UserWithPassword { UserData = new UserData() };
+        }
+        else if (user.UserData == null)
+        {
+            user.UserData = new UserData();
+        }
+
+        editContext = new EditContext(user);
+    }
+
     private async Task AuthenticateUser()
     {
+        var uri = "https://localhost:7245/Users";
+        var data = new Dictionary<string, string>
+        {
+            { "username", user.UserData.Username},
+			{ "password", user.Password }
+		};
 
-        List<User> users = await httpClient.GetFromJsonAsync<List<User>>("/Users");
+        string requestUri = QueryHelpers.AddQueryString(uri, data);
 
-        User userAccount = users?
-        .FirstOrDefault(x => x.Username == userLogin.Username);
+        AuthenticatedUser? authUser = null;
+        try
+        {
+            authUser = await httpClient.GetFromJsonAsync<AuthenticatedUser>(requestUri);
+		}
+		catch (Exception ex)
+		{
+			errorMessage = "An error occurred while trying to authenticate. Please try again later.";
+			Console.WriteLine($"Error during authentication: {ex.Message}");
+			return;
+		}
 
-        if(userAccount == null || userAccount.Password != userLogin.Password)
+        if(authUser == null)
         {
             errorMessage = "Invalid Username or password";
             return;
         }
 
-        NavigationManager.NavigateTo($"/Dashboard/User/{userAccount.Id}");
+        NavigationManager.NavigateTo($"/");
     }
-
-
-
 }

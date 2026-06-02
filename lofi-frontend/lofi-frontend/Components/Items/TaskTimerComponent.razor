@@ -1,0 +1,84 @@
+﻿@using lofi_frontend.Models
+@using System.Timers
+
+<div class="container-fluid d-flex justify-content-center align-items-center">
+	<div class="d-flex flex-column gap-0">
+		<div class="display-1 fw-bold text-white mb-4 font-monospace shadow-sm bg-dark bg-opacity-20 py-3 px-4 rounded-3">
+			@TimerDisplay
+		</div>
+
+		<div class="d-flex justify-content-center gap-3">
+			<button class="btn btn-success btn-lg px-4 shadow-sm d-flex align-items-center gap-2" @onclick="StartTimer">
+				<i class="bi bi-play-fill"></i> Start
+			</button>
+
+			<button class="btn btn-danger btn-lg px-4 shadow-sm d-flex align-items-center gap-2" @onclick="StopTimer">
+				<i class="bi bi-pause-fill"></i> Stop
+			</button>
+
+			<button class="btn btn-dark btn-lg px-4 shadow-sm d-flex align-items-center gap-2" @onclick="Dispose">
+				<i class="bi bi-trash-fill"></i> Delete
+			</button>
+		</div>
+	</div>
+</div>
+
+@code {
+	private System.Timers.Timer? _timer { get; set; } = null;
+	private TaskTimer _taskTimer { get; set; } = new TaskTimer();
+
+	private string TimerDisplay => new TimeSpan(0, 0, _taskTimer.Duration + 60).ToString("c");
+
+	private void SetTimer()
+	{
+		_timer = new(1000);
+		_timer.Elapsed += OnTimedEvent;
+	}
+
+	private void StartTimer()
+	{
+		if (_timer == null) {
+			Console.WriteLine("Creating new timer");
+			SetTimer();
+		}
+
+		if (!_timer?.Enabled ?? false)
+		{
+			Console.WriteLine("Starting Timer");
+			_timer?.Start();
+
+		} else {
+			Console.WriteLine("Timer already running");
+			return;
+		}
+	}
+
+	private void OnTimedEvent(Object source, ElapsedEventArgs e)
+	{
+		_taskTimer.Duration += 1;
+		InvokeAsync(StateHasChanged);
+	}
+
+	public void StopTimer()
+	{
+		if (_timer?.Enabled ?? false) {
+			Console.WriteLine("Stopping Timer");
+			_timer.Stop();
+		}
+		else
+		{
+			Console.WriteLine("Timer already stopped");
+			return;
+		}
+	}
+
+	public void Dispose()
+	{
+		if (_timer is not null && !_timer.Enabled)
+		{
+			_timer.Dispose();
+			_timer = null;
+			_taskTimer.Duration = 0;
+		}
+	}
+}
