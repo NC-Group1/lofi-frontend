@@ -1,0 +1,14 @@
+﻿@using lofi_frontend.Models
+<div class="music-card">
+
+    <h4>@Music.Title</h4>
+    <h4>@Music.Artist</h4>
+    <h4>@Music.Channel</h4>
+    <h4>@Music.Mood</h4>
+    <h4>@Music.Genre</h4>
+</div>
+
+@code {
+    [Parameter]
+    public Music Music { get; set; } = default!;
+}

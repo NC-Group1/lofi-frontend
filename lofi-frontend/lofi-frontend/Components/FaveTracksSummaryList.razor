@@ -1,0 +1,17 @@
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Components
+
+<h3>Your Favourite Tracks</h3>
+
+
+
+@foreach (var Music in Musics)
+{
+    <FaveTracksSummary Music="@Music" />
+}
+
+@code {
+    [Parameter]
+    public List<Music> Musics { get; set; } = default!;
+
+}
