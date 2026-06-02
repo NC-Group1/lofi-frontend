@@ -6,8 +6,8 @@ namespace lofi_frontend.Models
 {
     public class Playlist
     {
-        
-        public string Id { get; set; }
+        [Required]
+        public int? Id { get; set; }
         [Required]
         public string Name { get; set; } = "";
         [Required]
