@@ -39,6 +39,7 @@
                             <InputText @bind-Value="userSettings.ConfirmNewPassword" class="form-control" />
                             <div class="text-danger small"><ValidationMessage For="@(() => userSettings.ConfirmNewPassword)" /></div>
                         </div>
+                        <p>Please ensure your password is at least 8 characters long and includes a special character</p>
                         <button class="btn btn-primary" type="submit">Submit</button>
 
                     </EditForm>
@@ -48,20 +49,20 @@
         }
         @if (selectedSection == "ChangePassword")
     {
-        <UpdatePassword/>
+        <UserUpdatePasswordPage Id = "@currentUserId"/>
     }
     @if(selectedSection == "UpdateDetails")
     {
-        <UpdateDetails/>
+        <UserUpdateDetailsPage/>
 
     }
         @if (selectedSection == "ContactSupport")
     {
-        <ContactSupport/>
+        <UserContactSupportPage/>
     }
     @if(selectedSection == "DeleteAccount")
     {
-        <DeleteAccount/>
+        <UserDeleteAccountPage/>
     }
 
 </div>
@@ -76,6 +77,7 @@
     private UserSettingsForm userSettings = new UserSettingsForm();
     private string errorMessage = string.Empty;
     private string selectedSection = "";
+    private int currentUserId = 1; // Placeholder for the current user's ID, replace with actual user ID retrieval logic
 
 
     private void ChangePassword()
