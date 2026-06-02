@@ -3,15 +3,16 @@
 @inject HttpClient httpClient
 @rendermode InteractiveServer
 
+
 <div class="dashboard-layout">
     
     <div class="sidebar">
         <div class="user-card">
             <h2>@User.Username</h2>
-            <h5>Name: @User.FirstName @User.LastName</h5>
-            <h5>Age: @User.Age</h5>
-            <h5>Gender: @User.Gender</h5>
-            <h6>Email: @User.Email</h6>
+            <h6>@User.FirstName @User.LastName</h6>
+            <h6>@User.Dob.ToString("dd/mm/yyyy")</h6>
+            <h6>@User.Gender</h6>
+            <p>@User.Email</p>
         <NavLink href="@($"/User-Settings")">
         <button class="user-setting-button" type="button">Account Settings</button>
         </NavLink>
@@ -20,7 +21,18 @@
         <button class="project-button" type="button" @onclick="ShowProjects">Projects</button>
         <button class="playlist-button" type="button" @onclick="ShowPlaylists">Playlists</button>
         <button class="fave-tracks-button" type="button" @onclick="ShowFaveTracks">Favourite Tracks</button>
- </div>
+        </div>
+        <div class="stats-card">
+            <div class="stat-item">
+                <span class="stat-label">Time Worked</span>
+                <span class="stat-value">@timerList.Count</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-label">Projects</span>
+                <span class="stat-value">@projects.Count</span>
+            </div>
+        </div>
 </div>
 <div class="content">
     @if(selectedSection == "projects")
@@ -41,22 +53,20 @@
     <p>@errorMessage</p>
 }
 </div>
-<p class="time-worked">Time worked: {time}</p>
-<p class="total-projects">Total projects: {no. of projects}</p>
+
 
 @code {
     [Parameter]
     public int UserId { get; set; }
     [Parameter]
-    public User User { get; set; } = new User
+    public UserData User { get; set; } = new UserData
         {
-            Id = 1,
-            FirstName = "Emily",
-            LastName = "Carter",
-            Email = "emily.carter@example.com",
-            Username = "emcafe",
-            Password = "Password123!",
-            Age = 24,
+            Id = "test1",
+            FirstName = "Emma",
+            LastName = "Thompson",
+        Email = "emma.thompson@example.com",
+        Username = "studyowl",
+            Dob = new DateTime(1988, 04, 12),
             Gender = Gender.Female,
             Playlists = new List<Playlist>()
         };
@@ -67,13 +77,15 @@
     private List<Project> projects = new();
     private List<Playlist> playlists = new();
     private List<Music> faveTracks = new();
+    private List<TaskTimer> timerList = new();
     private async Task ShowProjects()
     {
         try
         {
             selectedSection = "projects";
-            projects = await httpClient.GetFromJsonAsync<List<Project>>("/projects");
-            
+            projects = await httpClient.GetFromJsonAsync<List<Project>>($"/projects");
+            projects = projects.FindAll(project => project.UserId == User.Id).ToList();
+
         }
         catch(Exception ex)
         {
@@ -86,12 +98,12 @@
         try
         {
             selectedSection = "playlists";
-            playlists = await httpClient.GetFromJsonAsync<List<Playlist>>("/playlists");
-            
+            playlists = await httpClient.GetFromJsonAsync<List<Playlist>>("/playlist");
+            playlists = playlists.FindAll(playlist => playlist.UserId == User.Id).ToList();
         }
         catch (Exception ex)
         {
-            errorMessage = $"Could not load projects: {ex.Message}";
+            errorMessage = $"Could not load playlists: {ex.Message}";
         }
     }
     private async Task ShowFaveTracks()
@@ -104,7 +116,7 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"Could not load projects: {ex.Message}";
+            errorMessage = $"Could not load track lists: {ex.Message}";
         }
     }
 
