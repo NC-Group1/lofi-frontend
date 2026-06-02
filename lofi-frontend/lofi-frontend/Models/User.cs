@@ -6,17 +6,29 @@ namespace lofi_frontend.Models
 {
     public class UserData
     {
-        public UserData() { }
+        public UserData() 
+        {
+            Id = string.Empty;
+            Username = string.Empty;
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            Email = string.Empty;
+            Dob = new DateTime(DateTime.Now.Year - 20, 1, 1);
+            Gender = Gender.PreferNotToSay;
+            Playlists = [];
+        }
 
-        public UserData(string id, string username, string firstName, string lastName, string email, DateTime age, Gender gender)
+        public UserData(string id, string username, string firstName, string lastName, string email, 
+            DateTime age, Gender gender = 0)
         {
             Id = id;
             Username = username;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            Age = age;
+            Dob = new DateTime(DateTime.Now.Year - 20, 1, 1);
             Gender = gender;
+            Playlists = [];
         }
 
         public string Id { get; set; } = string.Empty;
@@ -29,7 +41,7 @@ namespace lofi_frontend.Models
         [Required]
         public string Email { get; set; }
         [Required]
-        public DateTime Age { get; set; }
+        public DateTime Dob { get; set; }
         [Required]
         public Gender Gender { get; set; }
         public List<Playlist> Playlists { get; set; } = new List<Playlist>();
@@ -37,7 +49,14 @@ namespace lofi_frontend.Models
 
     public class AuthToken
     {
-        public AuthToken() { }
+        public AuthToken() {
+            Id = string.Empty;
+            AccessToken = string.Empty;
+            TokenType = string.Empty;
+            RefreshToken = string.Empty;
+            ExpiresIn = string.Empty;
+            ExpiresAt = string.Empty;
+        }
 
         public AuthToken(string id, string accessToken, string tokenType, string refreshToken, string expiresIn, string expiresAt)
         {
@@ -59,7 +78,11 @@ namespace lofi_frontend.Models
 
     public class AuthenticatedUser
     {
-        public AuthenticatedUser() { }
+        public AuthenticatedUser() 
+        { 
+            UserData = new UserData();
+            AuthToken = new AuthToken();
+        }
 
         public AuthenticatedUser(UserData user, AuthToken authToken)
         {
@@ -73,7 +96,11 @@ namespace lofi_frontend.Models
 
     public class UserWithPassword
     {
-        public UserWithPassword() { }
+        public UserWithPassword() 
+        {
+            UserData = new UserData();
+            Password = string.Empty;
+        }
 
         public UserWithPassword(UserData user, string password)
         {

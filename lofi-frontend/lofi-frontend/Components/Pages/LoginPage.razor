@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using lofi_frontend.Models
 @page "/Login"
+
 @rendermode InteractiveServer
 
 @inject HttpClient httpClient;
@@ -58,10 +59,8 @@
 </div>
 
 @code {
-    [CascadingParameter]
     public HttpContext? HttpContext { get; set; }
 
-    [SupplyParameterFromForm]
     public UserWithPassword user { get; set; } = new();
 
     public EditContext? editContext { get; set; }
