@@ -2,10 +2,11 @@
 @using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
 @page "/Signup"
+
 @rendermode InteractiveServer
+
 @inject NavigationManager NavigationManager;
-@inject HttpClient httpClient;
-@using System.Text;
+@inject HttpClient HttpClient;
 
 <div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
     <div class="card p-4 shadow my-5" style="width: 100%; max-width: 500px;">
@@ -14,8 +15,7 @@
 
         <EditForm 
             EditContext="editContext"
-            OnValidSubmit="HandleSignup" 
-            FormName="SignupForm">
+            OnValidSubmit="HandleSignup">
             
             <DataAnnotationsValidator />
 
@@ -45,20 +45,35 @@
 
             <div class="mb-2">
                 <label for="password-input" class="form-label">Password</label>
-                <InputText id="password-input" type="@(ShowPassword ? "text" : "password")" class="form-control"
-                @bind-Value="user.Password" />
+                <InputText 
+                    id="password-input" 
+                    type="@(ShowPassword ? "text" : "password")"
+                    class="form-control"
+                    @bind-Value="user.Password" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.Password)" /></div>
             </div>
-
+            
+            
+            <div class="mb-2">
+                <label for="password-input" class="form-label">Confirm Password</label>
+                <InputText 
+                    id="password-input" 
+                    type="@(ShowPassword ? "text" : "password")"
+                    class="form-control"
+                    @bind-Value="ConfirmPassword" />
+                <div class="text-danger small"><ValidationMessage For="@(() => ConfirmPassword)" /></div>
+            </div>
+            
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="showPassword" @bind="ShowPassword" />
                 <label class="form-check-label" for="showPassword">Show Password</label>
             </div>
 
+
             <div class="mb-3">
                 <label for="Date-of-birth" class="form-label">Date of Birth</label>
-                <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.UserData.Age" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Age)" /></div>
+                <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.UserData.Dob" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Dob)" /></div>
             </div>
 
             <div class="mb-4">
@@ -100,35 +115,50 @@
 </div>
 
 @code {
-	[SupplyParameterFromForm]
-	public UserWithPassword user { get; set; } = new();
+    public UserWithPassword? user { get; set; }
+    public string ConfirmPassword { get; set; } = string.Empty;
 
-	private bool ShowPassword { get; set; } = false;
-	private EditContext? editContext;
-	private ValidationMessageStore? validationMessageStore;
+    private EditContext? editContext;
+    private ValidationMessageStore? validationMessageStore;
 
-	protected override void OnInitialized()
-	{
-		user ??= new();
-		editContext = new EditContext(user);
-		editContext.OnValidationRequested += HandleValidationRequested;
-		validationMessageStore = new ValidationMessageStore(editContext);
-	}
+    private bool ShowPassword { get; set; } = false;
+
+    private void TogglePasswordVisibility()
+    {
+        ShowPassword = !ShowPassword;
+        StateHasChanged();
+    }
+    protected override void OnInitialized()
+    {
+        user = new UserWithPassword
+		{
+			UserData = new UserData(),
+			Password = string.Empty
+		};
+        editContext = new EditContext(user);
+        editContext.OnValidationRequested += HandleValidationRequested;
+        validationMessageStore = new ValidationMessageStore(editContext);
+    }
 
 	private void HandleValidationRequested(object? sender, ValidationRequestedEventArgs e)
 	{
 		validationMessageStore?.Clear();
 
-		if (user.UserData.Age != default)
+		if (user.UserData.Dob != default)
 		{
-			var age = DateTime.Today.Year - user.UserData.Age.Year;
-			if (user.UserData.Age > DateTime.Today.AddYears(-age))
+			var age = DateTime.Today.Year - user.UserData.Dob.Year;
+			if (user.UserData.Dob > DateTime.Today.AddYears(-age))
 				age--;
 
 			if (age < 13)
 			{
-				validationMessageStore?.Add(() => user.UserData.Age, "You must be at least 13 years old.");
+				validationMessageStore?.Add(() => user.UserData.Dob, "You must be at least 13 years old.");
 			}
+		}
+
+		if (user.Password != ConfirmPassword)
+		{
+			validationMessageStore?.Add(() => ConfirmPassword, "Passwords do not match.");
 		}
 
 		editContext?.NotifyValidationStateChanged();
@@ -136,9 +166,10 @@
 
 	private async Task HandleSignup()
 	{
+        var uri = "https://localhost:7245/Users";
 		try
 		{
-			var response = await httpClient.PostAsJsonAsync($"/{user.UserData.Id}", user);
+			var response = await HttpClient.PostAsJsonAsync<UserWithPassword>($"{uri}", user);
 
 			if (response.IsSuccessStatusCode)
 			{
