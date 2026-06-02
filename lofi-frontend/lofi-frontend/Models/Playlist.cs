@@ -2,12 +2,12 @@
 using lofi_frontend.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 
-namespace Models
+namespace lofi_frontend.Models
 {
     public class Playlist
     {
-        [Required]
-        public int Id { get; set; }
+        
+        public string Id { get; set; }
         [Required]
         public string Name { get; set; } = "";
         [Required]
@@ -15,5 +15,7 @@ namespace Models
         [Required]
         public Genre Genre { get; set; } = Genre.LoFi;
         public List<Music> Songs { get; set; } = new List<Music>();
+
+        public string UserId { get; set; }
     }
 }
