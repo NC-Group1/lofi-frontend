@@ -51,7 +51,7 @@ h1:focus {
 }
 
 
-//SignUp Page Styling
+/*SignUp Page Styling*/
 
 
 .Signup-Form-Box{
@@ -83,6 +83,18 @@ h1:focus {
     outline: none;
     border-color: #e5d38c;
     box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2);
+}
+
+/*Search Page Styling*/
+
+.search-video-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    place-items: center;
+    text-align: center;
+    padding: 10px;
+    font-size: 20px;
+    color: black;
 }
 
 

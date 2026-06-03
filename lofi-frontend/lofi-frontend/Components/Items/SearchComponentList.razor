@@ -1,0 +1,17 @@
+﻿    @using lofi_frontend.Models
+    @using lofi_frontend.Components.Items
+    @using lofi_frontend.Components.Layout
+
+<div class="search-video-container">
+    @foreach (var youtube in YoutubeVideos)
+    {
+        <div class="hello">
+            <SearchComponent YoutubeVideo="youtube" />
+        </div> 
+    }
+    </div>
+
+    @code {
+        [Parameter]
+        public List<Music>? YoutubeVideos { get; set; }
+    }
