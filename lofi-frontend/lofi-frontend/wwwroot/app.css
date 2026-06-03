@@ -362,4 +362,80 @@ h1:focus {
     font-size: 1.2rem;
     font-weight: 700;
 }
->>>>>>> 916ceb08dab8c3c213b64650e6205759c413d116
+/*> > > > > > > 916ceb08dab8c3c213b64650e6205759c413d116
+*/
+
+
+/* Center everything perfectly in the middle of the browser screen */
+.reset-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-vh: 100vh; /* Takes full window height */
+    width: 100%;
+    background: #f4f6f9; /* Soft, clean background tone */
+    padding: 20px;
+}
+
+/* Custom Card Styling */
+.reset-password-card {
+    width: 100%;
+    max-width: 450px;
+    background: #ffffff;
+    border: none;
+    border-radius: 12px; /* Smooth rounded corners */
+    padding: 2rem !important; /* Elegant breathing space */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Clean up headings */
+.reset-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #212529;
+    letter-spacing: -0.5px;
+}
+
+/* Modern Input Fields */
+.custom-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.custom-input {
+    border-radius: 8px;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #ced4da;
+    transition: all 0.2s ease-in-out;
+}
+
+    /* Smooth active highlight for inputs */
+    .custom-input:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+    }
+
+/* Helper Text Styling */
+.password-hint {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #6c757d;
+    background: #f8f9fa;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}
+
+/* Full Width Primary Submit Button */
+.reset-submit-btn {
+    padding: 0.65rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.custom-alert {
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
