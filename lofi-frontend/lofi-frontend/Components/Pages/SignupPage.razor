@@ -2,10 +2,11 @@
 @using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
 @page "/Signup"
+
 @rendermode InteractiveServer
+
 @inject NavigationManager NavigationManager;
-@inject HttpClient httpClient;
-@using System.Text;
+@inject HttpClient HttpClient;
 
 <div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
     <div class="card p-4 shadow my-5" style="width: 100%; max-width: 500px;">
@@ -14,55 +15,70 @@
 
         <EditForm 
             EditContext="editContext"
-            OnValidSubmit="HandleSignup" 
-            FormName="SignupForm">
+            OnValidSubmit="HandleSignup">
             
             <DataAnnotationsValidator />
 
             <div class="mb-3">
                 <label for="firstname-input" class="form-label">First Name</label>
-                <InputText id="firstname-input" class="form-control" @bind-Value="user.FirstName" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.FirstName)" /></div>
-            </div>
+                <InputText id="firstname-input" class="form-control" @bind-Value="user.UserData.FirstName" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.FirstName)" /></div>
+            </div >
 
             <div class="mb-3">
                 <label for="lastname-input" class="form-label">Last Name</label>
-                <InputText id="lastname-input" class="form-control" @bind-Value="user.LastName" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.LastName)" /></div>
+                <InputText id="lastname-input" class="form-control" @bind-Value="user.UserData.LastName" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.LastName)" /></div>
             </div>
 
             <div class="mb-3">
                 <label for="email-input" class="form-label">Email address</label>
-                <InputText id="email-input" type="email" class="form-control" @bind-Value="user.Email" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.Email)" /></div>
+                <InputText id="email-input" type="email" class="form-control" @bind-Value="user.UserData.Email" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Email)" /></div>
             </div>
 
             <div class="mb-3">
                 <label for="username-input" class="form-label">Username</label>
-                <InputText id="username-input" class="form-control" @bind-Value="user.Username" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.Username)" /></div>
+                <InputText id="username-input" class="form-control" @bind-Value="user.UserData.Username" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Username)" /></div>
             </div>
 
             <div class="mb-2">
                 <label for="password-input" class="form-label">Password</label>
-                <InputText id="password-input" type="@(ShowPassword ? "text" : "password")" class="form-control" @bind-Value="user.Password" />
+                <InputText 
+                    id="password-input" 
+                    type="@(ShowPassword ? "text" : "password")"
+                    class="form-control"
+                    @bind-Value="user.Password" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.Password)" /></div>
             </div>
-
+            
+            
+            <div class="mb-2">
+                <label for="password-input" class="form-label">Confirm Password</label>
+                <InputText 
+                    id="password-input" 
+                    type="@(ShowPassword ? "text" : "password")"
+                    class="form-control"
+                    @bind-Value="ConfirmPassword" />
+                <div class="text-danger small"><ValidationMessage For="@(() => ConfirmPassword)" /></div>
+            </div>
+            
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="showPassword" @bind="ShowPassword" />
                 <label class="form-check-label" for="showPassword">Show Password</label>
             </div>
 
+
             <div class="mb-3">
                 <label for="Date-of-birth" class="form-label">Date of Birth</label>
-                <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.DOB" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.DOB)" /></div>
+                <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.UserData.Dob" />
+                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Dob)" /></div>
             </div>
 
             <div class="mb-4">
                 <label for="gender" class="form-label">Gender</label>
-                <InputSelect id="gender" class="form-select" @bind-Value="user.Gender">
+                <InputSelect id="gender" class="form-select" @bind-Value="user.UserData.Gender">
                     @foreach (var gender in Enum.GetValues(typeof(Gender)))
                     {
                         <option value="@gender">
@@ -99,35 +115,50 @@
 </div>
 
 @code {
-	[SupplyParameterFromForm]
-	public User user { get; set; } = new User();
+    public UserWithPassword? user { get; set; }
+    public string ConfirmPassword { get; set; } = string.Empty;
 
-	private bool ShowPassword { get; set; } = false;
-	private EditContext? editContext;
-	private ValidationMessageStore? validationMessageStore;
+    private EditContext? editContext;
+    private ValidationMessageStore? validationMessageStore;
 
-	protected override void OnInitialized()
-	{
-		user ??= new();
-		editContext = new EditContext(user);
-		editContext.OnValidationRequested += HandleValidationRequested;
-		validationMessageStore = new ValidationMessageStore(editContext);
-	}
+    private bool ShowPassword { get; set; } = false;
+
+    private void TogglePasswordVisibility()
+    {
+        ShowPassword = !ShowPassword;
+        StateHasChanged();
+    }
+    protected override void OnInitialized()
+    {
+        user = new UserWithPassword
+		{
+			UserData = new UserData(),
+			Password = string.Empty
+		};
+        editContext = new EditContext(user);
+        editContext.OnValidationRequested += HandleValidationRequested;
+        validationMessageStore = new ValidationMessageStore(editContext);
+    }
 
 	private void HandleValidationRequested(object? sender, ValidationRequestedEventArgs e)
 	{
 		validationMessageStore?.Clear();
 
-		if (user.DOB != default)
+		if (user.UserData.Dob != default)
 		{
-			var age = DateTime.Today.Year - user.DOB.Year;
-			if (user.DOB > DateTime.Today.AddYears(-age))
+			var age = DateTime.Today.Year - user.UserData.Dob.Year;
+			if (user.UserData.Dob > DateTime.Today.AddYears(-age))
 				age--;
 
 			if (age < 13)
 			{
-				validationMessageStore?.Add(() => user.DOB, "You must be at least 13 years old.");
+				validationMessageStore?.Add(() => user.UserData.Dob, "You must be at least 13 years old.");
 			}
+		}
+
+		if (user.Password != ConfirmPassword)
+		{
+			validationMessageStore?.Add(() => ConfirmPassword, "Passwords do not match.");
 		}
 
 		editContext?.NotifyValidationStateChanged();
@@ -135,15 +166,16 @@
 
 	private async Task HandleSignup()
 	{
+        var uri = "https://localhost:5082/Users";
 		try
 		{
-			var response = await httpClient.PostAsJsonAsync($"/{user.Id}", user);
+			var response = await HttpClient.PostAsJsonAsync<UserWithPassword>($"{uri}", user);
 
 			if (response.IsSuccessStatusCode)
 			{
-				var newUser = await response.Content.ReadFromJsonAsync<User>();
+				var newUser = await response.Content.ReadFromJsonAsync<AuthenticatedUser>();
 
-				NavigationManager.NavigateTo($"/UserDashboard/{user.Id}");
+				NavigationManager.NavigateTo($"/UserDashboard/{user.UserData.Id}");
 			}
 			else
 			{

@@ -5,6 +5,7 @@
 @implements IDisposable
 
 
+
 <div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
     <div class="card p-4 shadow my-5" style="width: 100%; max-width: 500px;">
         @if (!string.IsNullOrEmpty(successMessage))
@@ -35,7 +36,7 @@
                 <DataAnnotationsValidator />
 
                 <div class="mb-3">
-                    <label for="firstname-input" class="form-label">First Name</label>
+                    <label for="firstname-input" class="form-label>">First Name</label>
                     <InputText id="firstname-input" class="form-control" @bind-Value="user.FirstName" />
                     <div class="text-danger small"><ValidationMessage For="@(() => user.FirstName)" /></div>
                 </div>
@@ -60,8 +61,8 @@
 
                 <div class="mb-3">
                     <label for="Date-of-birth" class="form-label">Date of Birth</label>
-                    <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.DOB" />
-                    <div class="text-danger small"><ValidationMessage For="@(() => user.DOB)" /></div>
+                    <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.Dob" />
+                    <div class="text-danger small"><ValidationMessage For="@(() => user.Dob)" /></div>
                 </div>
 
                 <div class="mb-4">
@@ -100,7 +101,7 @@
 
 @code {
     [Parameter] public int Id { get; set; }
-    public User user { get; set; } = new User();
+    public UserData user { get; set; } = new UserData();
     private bool isLoading = true;
     private string errorMessage = string.Empty;
     private string successMessage = string.Empty;
@@ -109,10 +110,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        user = new UserData();
         try
         {
             isLoading = true;
-            var currentUser = await httpClient.GetFromJsonAsync<User>($"/Users/{Id}", cts.Token);
+            errorMessage = string.Empty;
+            successMessage = string.Empty;
+            var currentUser = await httpClient.GetFromJsonAsync<UserData>($"/Users/{Id}", cts.Token);
             if (currentUser != null)
             {
                 user = currentUser;
@@ -142,7 +146,6 @@
 
     private async Task HandleUpdateDetails()
     {
-        if (user == null) return;
         isSaving = true;
         successMessage = string.Empty;
         errorMessage = string.Empty;
@@ -183,6 +186,3 @@
     }
 
     }
-
-   
-}
