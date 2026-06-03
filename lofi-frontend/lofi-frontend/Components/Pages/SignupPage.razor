@@ -166,7 +166,7 @@
 
 	private async Task HandleSignup()
 	{
-        var uri = "https://localhost:7245/Users";
+        var uri = "https://localhost:5082/Users";
 		try
 		{
 			var response = await HttpClient.PostAsJsonAsync<UserWithPassword>($"{uri}", user);

@@ -1,0 +1,60 @@
+﻿@inject NavigationManager NavigationManager;
+
+<div class="card border-warning max-width-500 mx-auto mt-5 shadow-sm">
+    <div class="card-header bg-warning text-dark text-center">
+        <h4 class="mb-0">⚠️ Account Deletion</h4>
+    </div>
+
+    <div class="card-body text-center p-4">
+        <h5 class="card-title text-muted mb-3">We are sorry to see you go!</h5>
+        <p class="card-text">
+            Deleting the account will remove all your data permanently from our database, including playlists, liked songs, and listening history.
+            This action cannot be undone.
+        </p>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger py-2 shadow-sm small">@errorMessage</div>
+        }
+
+        <div class="mb-4 mt-4">
+            <label for="userEmail" class="form-label text-muted small">Please type your email address to confirm:</label>
+            <input type="email" id="userEmail" class="form-control text-center mx-auto" 
+                   style="max-width: 320px;" placeholder="name@example.com" @bind="userEmail" />
+        </div>
+
+        <button class="btn btn-outline-secondary px-4" @onclick="GoBack">
+            No, Keep It
+        </button>
+        <button class="btn btn-danger px-4" @onclick="SendDeletionEmail">
+            Yes, Delete Account
+        </button>
+        </div>
+        </div>
+        
+
+    
+
+@code {
+
+    private string errorMessage = string.Empty;
+    private string userEmail = string.Empty;
+
+
+    private void SendDeletionEmail()
+    {
+        if (string.IsNullOrEmpty(userEmail))
+        {
+            errorMessage = "Please enter your email address to confirm.";
+            return;
+        }
+        // Here you would typically call an API endpoint to send the deletion email
+        // For this example, we'll just simulate the action with a success message
+        errorMessage = string.Empty; // Clear any previous error messages
+        // Simulate sending email and navigating to confirmation page
+        NavigationManager.NavigateTo("/AccountDeletionConfirmation");
+    }
+
+    private void GoBack() => NavigationManager.NavigateTo("/Settings");
+
+}

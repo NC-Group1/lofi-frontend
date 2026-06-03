@@ -111,4 +111,19 @@ namespace lofi_frontend.Models
         public UserData UserData { get; set; }
         public string Password { get; set; }
     }
+
+
+    public class UserSettingsForm
+    {
+        [Required(ErrorMessage = "Please enter your New Password")]
+        [StringLength(30, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long")]
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; } = "";
+
+        [Required(ErrorMessage = "Please confirm your New Password")]
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Passwords do not match")]
+        public string ConfirmNewPassword { get; set; } = "";
+    }
+
 }
