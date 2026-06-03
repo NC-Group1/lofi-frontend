@@ -1,5 +1,7 @@
+using lofi_frontend.Client;
 using lofi_frontend.Client.Pages;
 using lofi_frontend.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace lofi_frontend
 {
@@ -14,7 +16,13 @@ namespace lofi_frontend
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7245/") });
+            builder.Services.AddHttpClient("BackendApi", client => {
+                client.BaseAddress = new Uri("https://localhost:7245/");
+            });
+            ;
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 
             var app = builder.Build();
 

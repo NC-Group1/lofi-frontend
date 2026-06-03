@@ -1,6 +1,7 @@
 ﻿@using System.Reflection.Metadata
 @using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
 @page "/Signup"
 
 @rendermode InteractiveServer
@@ -115,30 +116,30 @@
 </div>
 
 @code {
-    public UserWithPassword? user { get; set; }
-    public string ConfirmPassword { get; set; } = string.Empty;
+	public UserWithPassword? user { get; set; }
+	public string ConfirmPassword { get; set; } = string.Empty;
 
-    private EditContext? editContext;
-    private ValidationMessageStore? validationMessageStore;
+	private EditContext? editContext;
+	private ValidationMessageStore? validationMessageStore;
 
-    private bool ShowPassword { get; set; } = false;
+	private bool ShowPassword { get; set; } = false;
 
-    private void TogglePasswordVisibility()
-    {
-        ShowPassword = !ShowPassword;
-        StateHasChanged();
-    }
-    protected override void OnInitialized()
-    {
-        user = new UserWithPassword
+	private void TogglePasswordVisibility()
+	{
+		ShowPassword = !ShowPassword;
+		StateHasChanged();
+	}
+	protected override void OnInitialized()
+	{
+		user = new UserWithPassword
 		{
 			UserData = new UserData(),
 			Password = string.Empty
 		};
-        editContext = new EditContext(user);
-        editContext.OnValidationRequested += HandleValidationRequested;
-        validationMessageStore = new ValidationMessageStore(editContext);
-    }
+		editContext = new EditContext(user);
+		editContext.OnValidationRequested += HandleValidationRequested;
+		validationMessageStore = new ValidationMessageStore(editContext);
+	}
 
 	private void HandleValidationRequested(object? sender, ValidationRequestedEventArgs e)
 	{
@@ -166,25 +167,30 @@
 
 	private async Task HandleSignup()
 	{
-        var uri = "https://localhost:7245/Users";
+		var uri = "https://localhost:7245/Users";
 		try
 		{
-			var response = await HttpClient.PostAsJsonAsync<UserWithPassword>($"{uri}", user);
+            var request = new HttpRequestMessage(HttpMethod.Post, uri)
+            {
+                Content = JsonContent.Create(user)
+            };
 
-			if (response.IsSuccessStatusCode)
-			{
-				var newUser = await response.Content.ReadFromJsonAsync<AuthenticatedUser>();
+            request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
 
-				NavigationManager.NavigateTo($"/UserDashboard/{user.UserData.Id}");
-			}
-			else
+			var response = await HttpClient.SendAsync(request);
+
+			if (!response.IsSuccessStatusCode)
 			{
 				Console.WriteLine("User creation failed. Do you already have an account?");
-			}
+				Console.WriteLine(await response.Content.ReadAsStringAsync());
+            }
+
+			NavigationManager.NavigateTo($"/UserDashboard/{user.UserData.Id}");
 		}
 		catch (Exception ex)
 		{
 			Console.WriteLine($"Error creating user: {ex.Message}");
+            return;
 		}
 	}
 

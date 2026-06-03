@@ -1,11 +1,10 @@
-﻿@using System.Text.Json
-@using Microsoft.AspNetCore.WebUtilities
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Http
 @using lofi_frontend.Models
 @page "/Login"
 
 @rendermode InteractiveServer
 
-@inject HttpClient httpClient;
+@inject IHttpClientFactory clientFactory;
 @inject NavigationManager NavigationManager;
 
 
@@ -14,19 +13,22 @@
 
         <h3 class="text-center h4 mb-4">Login to your account</h3>
 
-        <EditForm EditContext="editContext" OnValidSubmit="AuthenticateUser" FormName="Login Form">
+        <EditForm 
+			EditContext="editContext" 
+			OnValidSubmit="HandleSignIn" 
+			FormName="Login Form">
             <DataAnnotationsValidator />
 
             <div class="mb-3">
                 <label class="form-label">Username</label>
-                <InputText @bind-Value="user.UserData.Username" class="form-control" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Username)" /></div>
+                <InputText @bind-Value="loginForm.Username" class="form-control" />
+                <div class="text-danger small"><ValidationMessage For="@(() => loginForm.Username)" /></div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Password</label>
-                <InputText @bind-Value="user.Password" class="form-control" type="password" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.Password)" /></div>
+                <InputText @bind-Value="loginForm.Password" class="form-control" type="password" />
+                <div class="text-danger small"><ValidationMessage For="@(() => loginForm.Password)" /></div>
             </div>
 
             @if (!string.IsNullOrEmpty(errorMessage))
@@ -59,65 +61,105 @@
 </div>
 
 @code {
-    public HttpContext? HttpContext { get; set; }
+	public HttpClient httpClient { get; set; } = new();
 
-    public UserWithPassword user { get; set; } = new();
+	public LoginForm loginForm { get; set; } = new();
+	public LoginRequest loginRequest { get; set; } = new();
 
-    public EditContext? editContext { get; set; }
+	public EditContext? editContext { get; set; }
 
-    public List<AuthenticatedUser>? users { get; set; } = [];
+	private string? errorMessage;
 
-    private string? errorMessage;
+	protected override void OnInitialized()
+	{
+		editContext = new EditContext(loginForm);
+		httpClient = clientFactory.CreateClient("BackendApi");
+	}
 
-    protected override void OnInitialized()
-    {
-        user ??= new();
-        editContext = new EditContext(user);
-    }
+	private async Task HandleSignIn()
+	{
+		Console.WriteLine("Attempting to log in user");
+		try
+		{
+			await GetUserInfo();
+			await AuthenticateUser();
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.Message);
+			errorMessage = "User account not found";
+		}
+	}
 
-    protected override void OnParametersSet()
-    {
-        if (user == null)
-        {
-            user = new UserWithPassword { UserData = new UserData() };
-        }
-        else if (user.UserData == null)
-        {
-            user.UserData = new UserData();
-        }
+	private async Task GetUserInfo()
+	{
+		Console.WriteLine("Getting user data from backend");
+		var userInfoRequest = new HttpRequestMessage(HttpMethod.Get, 
+			httpClient.BaseAddress + "users/all");
+		Console.WriteLine(userInfoRequest.RequestUri);
+		Console.WriteLine(userInfoRequest.Method);
 
-        editContext = new EditContext(user);
-    }
+		var responseForUserData = await httpClient.SendAsync(userInfoRequest);
+		Console.WriteLine(await responseForUserData.Content.ReadAsStringAsync());
 
-    private async Task AuthenticateUser()
-    {
-        var uri = "https://localhost:7245/Users";
-        var data = new Dictionary<string, string>
-        {
-            { "username", user.UserData.Username},
-			{ "password", user.Password }
-		};
+		if (!responseForUserData.IsSuccessStatusCode) throw new FileNotFoundException();
 
-        string requestUri = QueryHelpers.AddQueryString(uri, data);
+		var userList = await responseForUserData.Content.ReadFromJsonAsync<List<UserData>>();
+		UserData? userInfo = userList?.FirstOrDefault(u => u.Username == loginForm.Username);
 
-        AuthenticatedUser? authUser = null;
-        try
-        {
-            authUser = await httpClient.GetFromJsonAsync<AuthenticatedUser>(requestUri);
+		if (userInfo == null) throw new InvalidDataException("No user found");
+
+		Console.WriteLine($"User Details: {userInfo?.Username}");
+
+		loginRequest.Email = userInfo.Email;
+		loginRequest.Password = loginForm.Password;
+	}
+
+	private async Task AuthenticateUser()
+	{
+		errorMessage = null;
+		Console.WriteLine("Attempting to sign in user: " + loginForm?.Username);
+		try
+		{
+			Console.WriteLine("Creating request");
+			var request = new HttpRequestMessage(HttpMethod.Post, "auth/sign-in")
+            {
+                Content = JsonContent.Create(
+					loginRequest
+				)
+            };
+
+			Console.WriteLine("Sending authentication request to:" + request.RequestUri);
+			request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
+
+			var responseForAuth = await httpClient.SendAsync(request);
+			if(!responseForAuth.IsSuccessStatusCode)
+			{
+				Console.WriteLine($"Request failed: {await responseForAuth.Content.ReadAsStringAsync()}");
+				errorMessage = "Invalid Username or password";
+				return;
+			}
+
+			Console.WriteLine(await responseForAuth.Content.ReadAsStringAsync());
+			NavigationManager.NavigateTo($"/Dashboard");
 		}
 		catch (Exception ex)
 		{
 			errorMessage = "An error occurred while trying to authenticate. Please try again later.";
-			Console.WriteLine($"Error during authentication: {ex.Message}");
+			Console.WriteLine($"Error during authentication: {ex.Message} | \n {ex.StackTrace}");
 			return;
 		}
+	}
 
-        if(authUser == null)
-        {
-            errorMessage = "Invalid Username or password";
-            return;
-        }
+	public class LoginForm
+	{
+		public string Username { get; set; } = "";
+		public string Password { get; set; } = "";
+	}
 
-        NavigationManager.NavigateTo($"/Dashboard/User/{user.UserData.Username}");
-    }
+	public class LoginRequest(string email = "", string password = "")
+	{
+		public string Email { get; set; } = email;
+		public string Password { get; set; } = password;
+	}
 }

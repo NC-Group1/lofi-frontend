@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\lofi-frontend.Client\lofi-frontend.Client.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.27" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.27" />
   </ItemGroup>
 

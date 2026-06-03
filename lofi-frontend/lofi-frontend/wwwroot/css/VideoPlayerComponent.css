@@ -19,19 +19,19 @@
     pointer-events: none; /* Keeps the video unclickable so users can click buttons on top */
 }
 
-    /* 3. The Magic Cushion: Forces a 16:9 iframe to scale up and crop 
-      rather than showing black bars on vertical or ultra-wide screens */
-    .bg-video-container iframe {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100vw;
-        height: 56.25vw; /* 9/16 of width */
-        min-height: 100vh;
-        min-width: 177.78vh; /* 16/9 of height */
-        transform: translate(-50%, -50%);
-        border: none;
-    }
+/* 3. The Magic Cushion: Forces a 16:9 iframe to scale up and crop 
+  rather than showing black bars on vertical or ultra-wide screens */
+.bg-video-container iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw; /* 9/16 of width */
+    min-height: 100vh;
+    min-width: 177.78vh; /* 16/9 of height */
+    transform: translate(-50%, -50%);
+    border: none;
+}
 
 /* 4. Layer your Blazor components directly on top */
 .content-overlay {
