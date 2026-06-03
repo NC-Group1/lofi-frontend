@@ -3,7 +3,7 @@
 @using lofi_frontend.Components.Layout
 @inject HttpClient Http
 
-
+<div class="search-layout">
 <input @bind-value="searchBox"
        @bind-value:event="oninput"
        placeholder="Search..." />
@@ -27,7 +27,7 @@ else
 {
     <SearchComponentList YoutubeVideos="youtubeVideos" />
 }
-
+</div>
 @code {
     private string searchBox = "Focus";
     private List<Music>? youtubeVideos;
