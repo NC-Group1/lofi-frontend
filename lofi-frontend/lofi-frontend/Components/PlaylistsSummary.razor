@@ -1,0 +1,14 @@
+﻿@using lofi_frontend.Models
+
+<div class="playlist-card">
+
+    <h4>@Playlist.Name</h4>
+    <h4>@Playlist.Mood</h4>
+    <h4>@Playlist.Genre</h4>
+
+</div>
+
+@code {
+    [Parameter]
+    public Playlist Playlist { get; set; } = default!;
+}

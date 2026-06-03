@@ -1,0 +1,123 @@
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Models.Enum
+@inject HttpClient httpClient
+@rendermode InteractiveServer
+
+
+<div class="dashboard-layout">
+    
+    <div class="sidebar">
+        <div class="user-card">
+            <h2>@User.Username</h2>
+            <h6>@User.FirstName @User.LastName</h6>
+            <h6>@User.Dob.ToString("dd/mm/yyyy")</h6>
+            <h6>@User.Gender</h6>
+            <p>@User.Email</p>
+        <NavLink href="@($"/User-Settings")">
+        <button class="user-setting-button" type="button">Account Settings</button>
+        </NavLink>
+        </div>
+        <div class="sidebar-buttons">
+        <button class="project-button" type="button" @onclick="ShowProjects">Projects</button>
+        <button class="playlist-button" type="button" @onclick="ShowPlaylists">Playlists</button>
+        <button class="fave-tracks-button" type="button" @onclick="ShowFaveTracks">Favourite Tracks</button>
+        </div>
+        <div class="stats-card">
+            <div class="stat-item">
+                <span class="stat-label">Time Worked</span>
+                <span class="stat-value">@timerList.Count</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-label">Projects</span>
+                <span class="stat-value">@projects.Count</span>
+            </div>
+        </div>
+</div>
+<div class="content">
+    @if(selectedSection == "projects")
+    {
+        <ProjectsSummaryList Projects="@projects" />
+    }
+    @if(selectedSection == "playlists")
+    {
+        <PlaylistsSummaryList Playlists="@playlists" />
+    }
+    @if(selectedSection == "faveTracks")
+    {
+        <FaveTracksSummaryList Musics="@faveTracks" />
+    }
+</div>
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p>@errorMessage</p>
+}
+</div>
+
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+    [Parameter]
+    public UserData User { get; set; } = new UserData
+        {
+            Id = "test1",
+            FirstName = "Emma",
+            LastName = "Thompson",
+        Email = "emma.thompson@example.com",
+        Username = "studyowl",
+            Dob = new DateTime(1988, 04, 12),
+            Gender = Gender.Female,
+            Playlists = new List<Playlist>()
+        };
+
+    private string selectedSection = "";
+
+    private string? errorMessage;
+    private List<Project> projects = new();
+    private List<Playlist> playlists = new();
+    private List<Music> faveTracks = new();
+    private List<TaskTimer> timerList = new();
+    private async Task ShowProjects()
+    {
+        try
+        {
+            selectedSection = "projects";
+            projects = await httpClient.GetFromJsonAsync<List<Project>>($"/projects");
+            projects = projects.FindAll(project => project.UserId == User.Id).ToList();
+
+        }
+        catch(Exception ex)
+        {
+            errorMessage = $"Could not load projects: {ex.Message}";
+        }
+
+    }
+    private async Task ShowPlaylists()
+    {
+        try
+        {
+            selectedSection = "playlists";
+            playlists = await httpClient.GetFromJsonAsync<List<Playlist>>("/playlist");
+            playlists = playlists.FindAll(playlist => playlist.UserId == User.Id).ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Could not load playlists: {ex.Message}";
+        }
+    }
+    private async Task ShowFaveTracks()
+    {
+        try
+        {
+            selectedSection = "faveTracks";
+            faveTracks = await httpClient.GetFromJsonAsync<List<Music>>("/music");
+            
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Could not load track lists: {ex.Message}";
+        }
+    }
+
+}
