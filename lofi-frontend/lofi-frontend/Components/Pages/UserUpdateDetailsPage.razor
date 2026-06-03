@@ -1,0 +1,188 @@
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Models.Enum
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+
+
+<div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
+    <div class="card p-4 shadow my-5" style="width: 100%; max-width: 500px;">
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success">
+                @successMessage
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        @if (isLoading)
+        {
+            <div class="text-center p-3">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Loading user data...</p>
+            </div>
+        }
+        else
+        {
+            <EditForm Model="user"
+                      OnValidSubmit="HandleUpdateDetails"
+                      FormName="UpdateDetailsForm">
+
+                <DataAnnotationsValidator />
+
+                <div class="mb-3">
+                    <label for="firstname-input" class="form-label>">First Name</label>
+                    <InputText id="firstname-input" class="form-control" @bind-Value="user.FirstName" />
+                    <div class="text-danger small"><ValidationMessage For="@(() => user.FirstName)" /></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="lastname-input" class="form-label">Last Name</label>
+                    <InputText id="lastname-input" class="form-control" @bind-Value="user.LastName" />
+                    <div class="text-danger small"><ValidationMessage For="@(() => user.LastName)" /></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email-input" class="form-label">Email address</label>
+                    <InputText id="email-input" type="email" class="form-control" @bind-Value="user.Email" />
+                    <div class="text-danger small"><ValidationMessage For="@(() => user.Email)" /></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="username-input" class="form-label">Username</label>
+                    <InputText id="username-input" class="form-control" @bind-Value="user.Username" />
+                    <div class="text-danger small"><ValidationMessage For="@(() => user.Username)" /></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Date-of-birth" class="form-label">Date of Birth</label>
+                    <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.Dob" />
+                    <div class="text-danger small"><ValidationMessage For="@(() => user.Dob)" /></div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="gender" class="form-label">Gender</label>
+                    <InputSelect id="gender" class="form-select" @bind-Value="user.Gender">
+                        @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                        {
+                            <option value="@gender">
+                                @switch (gender)
+                                {
+                                    case Gender.NonBinary:
+                                        @("Non-Binary")
+                                        break;
+                                    case Gender.PreferNotToSay:
+                                        @("Prefer Not To Say")
+                                        break;
+                                    default:
+                                        @gender.ToString()
+                                        break;
+                                }
+                            </option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <button class="btn btn-success" type="submit" disabled="@isSaving">
+                    @(isSaving ? "Saving..." : "Save Changes")
+                </button>
+                <hr />
+
+            </EditForm>
+        }
+        
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    public UserData user { get; set; } = new UserData();
+    private bool isLoading = true;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+    private bool isSaving = false;
+    private readonly CancellationTokenSource cts = new CancellationTokenSource();
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = new UserData();
+        try
+        {
+            isLoading = true;
+            errorMessage = string.Empty;
+            successMessage = string.Empty;
+            var currentUser = await httpClient.GetFromJsonAsync<UserData>($"/Users/{Id}", cts.Token);
+            if (currentUser != null)
+            {
+                user = currentUser;
+            }
+            else
+            {
+                errorMessage = "User not found.";
+            }
+
+        }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Operation was cancelled.");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Failed to load user details.";
+            Console.WriteLine($"Error fetching user details: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+
+    }
+
+
+    private async Task HandleUpdateDetails()
+    {
+        isSaving = true;
+        successMessage = string.Empty;
+        errorMessage = string.Empty;
+
+
+        try
+        {
+            var response = await httpClient.PutAsJsonAsync($"/Users/{Id}", user, cts.Token);
+
+            if (response.IsSuccessStatusCode)
+            {
+                successMessage = "Profile updated successfully!";
+            }
+            else
+            {
+                errorMessage = "Failed to save changes. Please try again.";
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Save operation was cancelled.");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while saving.";
+            Console.WriteLine($"Error updating details: {ex.Message}");
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+        public void Dispose()
+    {
+        cts.Cancel();
+        cts.Dispose();
+    }
+
+    }

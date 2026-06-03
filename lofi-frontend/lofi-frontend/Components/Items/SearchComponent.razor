@@ -1,0 +1,24 @@
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Components.Layout
+
+
+<div class="search-video">
+     
+    <NavLink href="/videoplayer/{videoId}">
+    
+        <iframe src="@GetUrl()" allowfullscreen></iframe>
+        <h4>@YoutubeVideo.Title</h4>
+    </NavLink>
+</div>
+
+@code {
+    [Parameter]
+    public Music YoutubeVideo { get; set; } = default!;
+
+    private string GetUrl()
+    {
+        var videoId = YoutubeVideo.URL.Split("v=").Last();
+
+        return $"https://www.youtube.com/embed/{videoId}";
+    }
+}
