@@ -4,10 +4,30 @@
 @rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
-<div class="vh-100">
-	<MusicPlayerComponent VideoCode="@VideoCode" />
-</div>
+<div class="page-container home-page">
+	
+	<div class="home-layout">
+		
+		<div class="welcome-message">
+			<h2>Welcome to Calico ☕</h2>
+			<p>
+				Focus, relax and track your projects
+				with curated lo-fi playlists.
+			</p>
+		</div>
+		<div class="now-playing home-card">
+			<h3>🎵 Now Playing</h3>
+		</div>
+		<div class="music-player home-card">
+			<MusicPlayerComponent VideoCode="@VideoCode" />
+		</div>
+		<div class="featured-moods-section">
+			<h3>Featured Moods</h3>
 
+			<FeaturedMoodsComponent />
+		</div>
+	</div>
+</div>
 
 @code {
 	private string VideoCode = "ZvJQt559CTY";

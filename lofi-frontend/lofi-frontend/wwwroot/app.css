@@ -1,6 +1,6 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background: radial-gradient(circle at 12.3% 19.3%, rgb(85, 88, 218) 0%, rgb(95, 209, 249) 100.2%);
+/*    background: radial-gradient(circle at 12.3% 19.3%, rgb(85, 88, 218) 0%, rgb(95, 209, 249) 100.2%);*/
 }
 
 .text-shadow-sm {
@@ -64,19 +64,60 @@ h1:focus {
     border-color: #929292;
 }
 
-/*dashboard styling*/
 
-.dashboard-layout {
-    display: grid;
-    grid-template-columns: 320px 1fr;
+/*layout styling */
+.default-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    background: rgba(109, 89, 122, 0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.default-header {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    background: transparent;
+}
+.default-footer {
+    padding: 1rem;
+    background: linear-gradient( 135deg, #6D597A 0%, #B56576 50%, #E56B6F 100%);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    letter-spacing: 1px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+.page-container {
     min-height: 100vh;
-    background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/images/lofi-background.jpg');
+    background-image: var(--page-background);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+/*dashboard styling*/
+.dashboard-page {
+    --page-background: linear-gradient( rgba(0,0,0,0.25), rgba(0,0,0,0.25) ), url('/images/lofi-background.jpg');
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+.dashboard-layout {
+    padding-top: 100px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
     color: white;
 }
 .sidebar {
+    
     padding: 2rem;
     background: rgba(255,255,255,0.08);
     backdrop-filter: blur(20px);
@@ -173,3 +214,117 @@ h1:focus {
     font-size: 1.2rem;
     font-weight: 700;
 }
+
+/*home page styling*/
+.home-page {
+    background-image: linear-gradient( rgba(20,20,30,0.45), rgba(20,20,30,0.45) ), url('/images/lofi-home-bg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.home-layout{
+    padding-top: 150px;
+}
+.home-layout {
+    padding: 140px 40px 40px;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "welcome"
+        "nowplaying"
+        "player"
+        "moods";
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.home-card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    padding: 1rem;
+    color: white;
+}
+.welcome-message {
+    grid-area: welcome;
+}
+.now-playing {
+    grid-area: nowplaying;
+    text-align: center;
+    color: white;
+}
+
+    .now-playing h3 {
+        margin: 0;
+        font-size: 2rem;
+    }
+
+.music-player {
+    grid-area: player;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.featured-moods-section {
+    grid-area: moods;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    color: white;
+}
+
+    .featured-moods-section h3 {
+        text-align: center;
+        font-size: 2rem;
+    }
+.welcome-message {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    border-radius: 30px;
+}
+    .welcome-message h2 {
+        font-size: 4rem;
+        font-weight: 700;
+        text-shadow: 3px 3px 12px rgba(0,0,0,0.5);
+        color: white;
+    }
+    .welcome-message p {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        color: white;
+    }
+.featured-moods {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+.mood-card {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 1.5rem;
+    color: white;
+    transition: all .25s ease;
+}
+
+    .mood-card:hover {
+        transform: translateY(-8px);
+        background: rgba(255,255,255,0.12);
+    }
+    .mood-card p {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        color: white;
+        text-align: center;
+    }
