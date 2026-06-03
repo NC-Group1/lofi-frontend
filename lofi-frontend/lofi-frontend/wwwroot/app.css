@@ -120,10 +120,11 @@ h1:focus {
     font-size: 1rem;
 }
 
-.input-group:focus {
-    outline: none;
-    border-color: #e5d38c;
-    box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2);
+    .input-group:focus {
+        outline: none;
+        border-color: #e5d38c;
+        box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2);
+    }
 .dashboard-layout {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -440,7 +441,7 @@ h1:focus {
 
 
 
-=======
+
 .stat-item {
     display: flex;
     justify-content: space-between;
@@ -568,8 +569,6 @@ h1:focus {
         color: white;
         text-align: center;
     }
-/*> > > > > > > 916ceb08dab8c3c213b64650e6205759c413d116
-*/
 
 
 /* Center everything perfectly in the middle of the browser screen */
