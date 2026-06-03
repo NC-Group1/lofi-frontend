@@ -1,0 +1,13 @@
+﻿@using lofi_frontend.Models
+<div class="project-card">
+
+    <h4>@Project.Name</h4>
+    <h4>@Project.StartDate</h4>
+    <h4>@Project.EndDate</h4>
+    <h4>@Project.Timers</h4>
+</div>
+
+@code {
+    [Parameter]
+    public Project Project { get; set; } = default!;
+}

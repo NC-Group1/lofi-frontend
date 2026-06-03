@@ -8,7 +8,7 @@ namespace lofi_frontend.Models
     {
         public UserData() 
         {
-            Id = string.Empty;
+            Id = null;
             Username = string.Empty;
             FirstName = string.Empty;
             LastName = string.Empty;
@@ -31,7 +31,7 @@ namespace lofi_frontend.Models
             Playlists = [];
         }
 
-        public string Id { get; set; } = string.Empty;
+        public string? Id { get; set; } = string.Empty;
         [Required]
         public string Username { get; set; }
         [Required]

@@ -1,33 +1,19 @@
-﻿@using lofi_frontend.Models
+﻿@using System.Text.Json
 @using System.Timers
+@using lofi_frontend.Models
 
-<div class="container-fluid d-flex justify-content-center align-items-center">
-	<div class="d-flex flex-column gap-0">
-		<div class="display-1 fw-bold text-white mb-4 font-monospace shadow-sm bg-dark bg-opacity-20 py-3 px-4 rounded-3">
-			@TimerDisplay
-		</div>
+@inject HttpClient HttpClient
+@inject IJSRuntime JS
 
-		<div class="d-flex justify-content-center gap-3">
-			<button class="btn btn-success btn-lg px-4 shadow-sm d-flex align-items-center gap-2" @onclick="StartTimer">
-				<i class="bi bi-play-fill"></i> Start
-			</button>
-
-			<button class="btn btn-danger btn-lg px-4 shadow-sm d-flex align-items-center gap-2" @onclick="StopTimer">
-				<i class="bi bi-pause-fill"></i> Stop
-			</button>
-
-			<button class="btn btn-dark btn-lg px-4 shadow-sm d-flex align-items-center gap-2" @onclick="Dispose">
-				<i class="bi bi-trash-fill"></i> Delete
-			</button>
-		</div>
-	</div>
+<div class="display-1 fw-bold text-white font-monospace shadow-sm bg-dark bg-opacity-20 py-3 px-4 rounded-3">
+	@TimerDisplay
 </div>
 
 @code {
 	private System.Timers.Timer? _timer { get; set; } = null;
 	private TaskTimer _taskTimer { get; set; } = new TaskTimer();
 
-	private string TimerDisplay => new TimeSpan(0, 0, _taskTimer.Duration + 60).ToString("c");
+	private string TimerDisplay => new TimeSpan(0, 0, _taskTimer.Duration).ToString("c");
 
 	private void SetTimer()
 	{
@@ -35,7 +21,7 @@
 		_timer.Elapsed += OnTimedEvent;
 	}
 
-	private void StartTimer()
+	public async Task StartTimer()
 	{
 		if (_timer == null) {
 			Console.WriteLine("Creating new timer");
@@ -59,7 +45,7 @@
 		InvokeAsync(StateHasChanged);
 	}
 
-	public void StopTimer()
+	public async Task StopTimer()
 	{
 		if (_timer?.Enabled ?? false) {
 			Console.WriteLine("Stopping Timer");
@@ -72,13 +58,54 @@
 		}
 	}
 
-	public void Dispose()
+	public async Task Dispose()
 	{
 		if (_timer is not null && !_timer.Enabled)
 		{
+			Console.WriteLine("Disposing Timer");
 			_timer.Dispose();
 			_timer = null;
 			_taskTimer.Duration = 0;
+			await InvokeAsync(StateHasChanged);
+		}
+	}
+
+	public async Task SaveTaskTime()
+	{
+		if (_taskTimer.Duration == 0)
+		{
+			Console.WriteLine("No time to save");
+			return;
+		}
+
+		if (_timer?.Enabled ?? false)
+		{
+			Console.WriteLine("Stopping timer before saving");
+			_timer.Stop();
+		}
+
+		var url = "https://localhost:7245/TaskTimer";
+
+		_taskTimer.DateCreated = DateTime.UtcNow;
+		_taskTimer.DateUpdated = DateTime.UtcNow;
+		_taskTimer.ProjectId = 1; // Placeholder, replace with actual project ID as needed
+		_taskTimer.Id = null; // Ensure ID is null for new entries
+		Console.WriteLine(JsonSerializer.Serialize(_taskTimer));
+
+		try
+		{
+			var response = await HttpClient.PostAsJsonAsync<TaskTimer>(url, _taskTimer);
+			Console.WriteLine(await response.Content.ReadAsStringAsync());
+
+			if (response.IsSuccessStatusCode)
+			{
+				await JS.InvokeVoidAsync("alert", "Task time saved successfully!");
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error saving task: {ex.Message}");
+			await JS.InvokeVoidAsync("alert", "Failed to save task time.");
 		}
 	}
 }

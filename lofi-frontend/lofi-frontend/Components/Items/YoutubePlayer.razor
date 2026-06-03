@@ -1,17 +1,21 @@
-﻿<div class="ratio ratio-16x9 vw-100">
-	<iframe 			
-		class="embed-responsive-item"
-		src="@GetURL()"
-		allowfullscreen
-		/>
-</div>
+﻿@inject IJSRuntime JS
+
+<div id="yt-player" class="w-100 h-100"></div>
 
 @code {
 	[Parameter]
-	public string VideoCode { get; set; }
+	public string VideoCode { get; set; } = "ZvJQt559CTY";
 
-	public string GetURL()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		return $"https://www.youtube.com/embed/" + VideoCode;
+		if (firstRender)
+		{
+			await Task.Delay(500);
+			await JS.InvokeVoidAsync("initializeYouTubePlayer", "yt-player", VideoCode);
+		}	
 	}
+
+	public async Task Play() => await JS.InvokeVoidAsync("playYouTubeVideo");
+	public async Task Pause() => await JS.InvokeVoidAsync("stopYouTubeVideo");
+	public async Task ResetTime() => await JS.InvokeVoidAsync("resetSeeker");
 }

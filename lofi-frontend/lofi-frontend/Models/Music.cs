@@ -6,7 +6,7 @@ namespace lofi_frontend.Models
     public class Music
 {
     [Required]
-    public int Id { get; set; }
+    public int? Id { get; set; }
     [Required]
     public string Title { get; set; } = "";
     [Required]
