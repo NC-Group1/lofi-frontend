@@ -2,18 +2,41 @@
 @using lofi_frontend.Components.Layout
 
 
-<div class="search-video">
-     
-    <NavLink href="/videoplayer/{videoId}">
-    
-        <iframe src="@GetUrl()" allowfullscreen></iframe>
-        <h4>@YoutubeVideo.Title</h4>
-    </NavLink>
+<div class="search-video" style="max-width: 200px;">
+    <button class="card bg-transparent border-0 text-start w-100" @onclick="ReturnVideoCode">
+        <div class="ratio ratio-4x3">
+            <img class="card-img rounded" src="@YoutubeVideo.Thumbnail" style="object-fit: cover;" alt="@YoutubeVideo.Title">
+        </div>
+
+        <div class="card-body px-0 pt-2 w-100">
+            @if (YoutubeVideo.Title.Length > 50)
+            {
+                <p class="card-text">@(YoutubeVideo.Title.Substring(0, 50) + "...")</p>
+            }
+            else
+            {
+                <p class="card-text">@YoutubeVideo.Title</p>
+            }
+        </div>
+    </button>
 </div>
 
 @code {
-    [Parameter]
-    public Music YoutubeVideo { get; set; } = default!;
+	[Parameter]
+	public Music YoutubeVideo { get; set; } = default!;
+
+	[Parameter]
+	public EventCallback<string> GetVideoCode { get; set; }
+
+	public async Task ReturnVideoCode()
+	{
+		Console.WriteLine("Video Code Update triggered");
+		if (GetVideoCode.HasDelegate)
+		{
+			Console.WriteLine("Returning code to parent");
+			await GetVideoCode.InvokeAsync(YoutubeVideo.URL);
+        }
+    }
 
     private string GetUrl()
     {

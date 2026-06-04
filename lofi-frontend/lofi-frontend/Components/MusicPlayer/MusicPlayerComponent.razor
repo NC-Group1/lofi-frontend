@@ -11,18 +11,14 @@
 	</div>
 
 	@* Control/Search Container *@
-	<div class="control-container d-flex flex-row gap-4 justify-content-between align-items-center">
+	<div class="control-container d-flex flex-row gap-4 justify-content-around align-items-center">
 
 		@* Timer Component *@
 		<div class="d-flex flex-column gap-2 justify-content-center align-items-center">
 			<div class="d-flex flex-row align-items-center gap-2">
-				<div class="ms-5">
+				<div class="">
 					<TaskTimerComponent @ref="TimerReference" />
 				</div>
-
-				<button class="btn p-0" @onclick="ResetTimer">
-					<img src="images/reset.png" height="50" />
-				</button>
 			</div>
 
 			@* Timer Buttons *@
@@ -59,15 +55,26 @@
 
 @code {
 	[Parameter]
-	public string VideoCode { get; set; } = "ZvJQt559CTY";
+	public string VideoCode { get; set; } = "";
 
 	[Parameter] 
 	public EventCallback<string> GetSearchTerm { get; set; }
+
+	[Parameter]
+	public EventCallback SetNewVideo { get; set; }
 
 	private YoutubePlayer? PlayerReference { get; set; }
 	private TaskTimerComponent? TimerReference { get; set; }
 
 	private bool IsPlaying = false;
+
+	public async Task LoadNewVideo(string code)
+	{
+		if (PlayerReference != null)
+		{
+			await PlayerReference.LoadNewVideo(code.Remove(0, "https://www.youtube.com/watch?v=".Count()));
+		}
+	}
 
 	private async Task StartTimerAndVideo()
 	{

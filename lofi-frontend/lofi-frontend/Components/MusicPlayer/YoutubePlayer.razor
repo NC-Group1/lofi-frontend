@@ -18,4 +18,5 @@
 	public async Task Play() => await JS.InvokeVoidAsync("playYouTubeVideo");
 	public async Task Pause() => await JS.InvokeVoidAsync("stopYouTubeVideo");
 	public async Task ResetTime() => await JS.InvokeVoidAsync("resetSeeker");
+	public async Task LoadNewVideo(string code) => await JS.InvokeVoidAsync("loadVideoById", code);
 }

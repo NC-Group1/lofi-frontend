@@ -6,8 +6,13 @@
 @inject IJSRuntime JS
 
 <div class="display-1 fw-bold text-white font-monospace shadow-sm bg-dark bg-opacity-20 py-3 px-4 rounded-3">
-	@TimerDisplay
-</div>
+	<div class="d-flex flex-row align-content-center justify-content-center gap-4">
+		@TimerDisplay
+		<button class="btn p-0" style="filter: invert(1) brightness(2);" @onclick="Dispose">
+		<img src="images/reset.png" height="50" />
+	</button>
+	</div>
+	</div>
 
 @code {
 	private System.Timers.Timer? _timer { get; set; } = null;

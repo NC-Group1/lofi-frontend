@@ -10,32 +10,28 @@
 <PageTitle>Home</PageTitle>
 <div class="home-page page-container">
 	<div class="home-layout">
-		<div class="d-flex flex-column gap-5">
-			@* <div class="welcome-message">
-			<h2>Welcome to Calico ☕</h2>
-			<p>
-				Focus, relax and track your projects
-				with curated lo-fi playlists.
-			</p>
-		</div>
-		<div class="now-playing home-card">
-			<h3>🎵 Now Playing</h3>
-		</div> *@
-			<MusicPlayerComponent @ref="MusicPlayerRef" VideoCode="@VideoCode" GetSearchTerm="GetSearchTerm" />
+		<div class="d-flex flex-column gap-5">			
+			<MusicPlayerComponent 
+				@ref="MusicPlayerRef" 
+				VideoCode="@VideoCode" 
+				GetSearchTerm="GetSearchTerm"
+				/>
 		</div>
 		<div class="container featured-moods-section home-card">
 			<h3>Results</h3>
 
-			<SearchComponentList @ref="SearchResultRef" YoutubeVideos="YoutubeVideos" />
+			<SearchComponentList 
+				@ref="SearchResultRef" 
+				YoutubeVideos="YoutubeVideos"
+				GetVideoCode="GetVideoCode"/>
 
-			@* <FeaturedMoodsComponent /> *@
 		</div>
 	</div>
 </div>
 
 @code {
 	private string VideoCode = "ZvJQt559CTY";
-	private string SearchTerm { get; set; } = "";
+	private string SearchTerm { get; set; } = "Focus";
 	private string? errorMessage { get; set; }
 	private List<Music>? YoutubeVideos { get; set; }
 
@@ -44,9 +40,19 @@
 	private MusicPlayerComponent? MusicPlayerRef { get; set; }
 	private SearchComponentList? SearchResultRef { get; set; }
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
 		clientFactory.CreateClient("BackendApi");
+		await GetVideo();
+	}
+
+	private async Task GetVideoCode(string videoCode)
+	{
+		Console.WriteLine("Getting video code to change video");
+		VideoCode = videoCode;
+		Console.WriteLine($"Code: {VideoCode}");
+		await MusicPlayerRef.LoadNewVideo(VideoCode);
+		await InvokeAsync(StateHasChanged);
 	}
 
 	private async Task GetSearchTerm(string searchTerm)
@@ -73,8 +79,6 @@
 			Console.WriteLine($"Request Info: URL {request.RequestUri}");
 
 			var response = await httpClient.SendAsync(request);
-
-			Console.WriteLine(await response.Content.ReadAsStringAsync());
 
 			YoutubeVideos = await response.Content.ReadFromJsonAsync<List<Music>>();
 
