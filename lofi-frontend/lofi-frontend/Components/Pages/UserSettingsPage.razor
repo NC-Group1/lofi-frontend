@@ -2,22 +2,24 @@
 @page "/Settings"
 @rendermode InteractiveServer
 @using lofi_frontend.Components.Pages
+@using lofi_frontend.Components.Items
 
 <div class="page-container settings-page">
 <div class="settings-layout">
-<div class="settings-sidebar">
+ 
+<nav class="settings-sidebar" aria-label="Settings navigation">
         <div class="settings-sidebar-buttons">
-        <button class="changePassword-button" type="button" @onclick="ChangePassword">Change Password</button>
-        <button class="Details-button" type="button" @onclick="UpdateDetails">Update Details</button>
-            <button class="Contact-Support-button" type="button" @onclick="ContactSupport">Contact Support</button>
-
-        <button class="Delete-Account-button" type="button" @onclick="DeleteAccount">Delete Account</button>
+                <button class="changePassword-button" type="button" aria-current="@(selectedSection == "ChangePassword" ? "page" : null)" @onclick="ChangePassword">Change Password</button>
+                <button class="Details-button" type="button" aria-current="@(selectedSection == "UpdateDetails" ? "page" : null)" @onclick="UpdateDetails">Update Details</button>
+                <button class="Contact-Support-button" type="button" aria-current="@(selectedSection == "ContactSupport" ? "page" : null)" @onclick="ContactSupport">Contact Support</button>
+                <button class="Delete-Account-button" type="button" aria-current="@(selectedSection == "DeleteAccount" ? "page" : null)" @onclick="DeleteAccount">Delete Account</button>
  </div>
- </div>
+ </nav>
+        
 
- <div class="content">
+ <section class="content" aria-labelledby="settings-heading">
 
-                 <h3 class="text-center h4 mb-4">Settings</h3>
+                 <h1 id="settings-heading" class="text-center h4 mb-4">Settings</h1>
         @if (selectedSection == "")
         {
      <UserUpdatePasswordPage />
@@ -41,7 +43,7 @@
         <UserDeleteAccountPage/>
     }
 
-</div>
+</section>
 </div>
 </div>
 
