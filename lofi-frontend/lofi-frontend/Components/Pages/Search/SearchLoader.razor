@@ -1,0 +1,51 @@
+﻿@using System.Net.Http.Json
+@using lofi_frontend.Models
+@using lofi_frontend.Components.Layout
+@inject HttpClient Http
+
+<SearchField></SearchField>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red">@errorMessage</p>
+}
+
+@if (youtubeVideos == null)
+{
+    <p>Loading videos...</p>
+}
+else if (!youtubeVideos.Any())
+{
+    <p>No videos found.</p>
+}
+else
+{
+    <SearchComponentList YoutubeVideos="youtubeVideos" />
+}
+@code {
+    private string searchBox = "Focus";
+    private List<Music>? youtubeVideos;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetVideo();
+    }
+
+    private async Task GetVideo()
+    {
+        try
+        {
+            errorMessage = null;
+
+            youtubeVideos = await Http.GetFromJsonAsync<List<Music>>(
+                $"https:localhost:7245/Youtube?search={Uri.EscapeDataString(searchBox)}"
+            );
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Could not load videos: {ex.Message}";
+            youtubeVideos = new List<Music>();
+        }
+    }
+}

@@ -1,0 +1,24 @@
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Components.MusicPlayer
+@using lofi_frontend.Components.Layout
+
+<div class="search-video-container">
+	@if (YoutubeVideos == null || YoutubeVideos.Count() <= 0)
+	{
+		<p>No videos found...</p>
+	}
+	else
+	{
+		@foreach (var youtube in YoutubeVideos)
+		{
+			<div class="hello">
+				<SearchResult YoutubeVideo="youtube" />
+			</div>
+		}
+	}
+</div>
+
+@code {
+	[Parameter]
+	public List<Music>? YoutubeVideos { get; set; } = [];
+}
