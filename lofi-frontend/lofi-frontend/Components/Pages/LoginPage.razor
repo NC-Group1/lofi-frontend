@@ -28,7 +28,9 @@
                 <InputText @bind-Value="user.Password" class="form-control" type="password" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.Password)" /></div>
             </div>
-
+            
+            <NavLink href="forgot-password" class="btn btn-outline-secondary w-100">
+Forgot Password? </NavLink>
             @if (!string.IsNullOrEmpty(errorMessage))
             {
                 <div class="alert alert-danger p-2 small text-center mb-3" role="alert">
