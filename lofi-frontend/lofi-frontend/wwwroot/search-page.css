@@ -1,0 +1,16 @@
+﻿
+/*Search Page Styling*/
+.search-layout{
+    padding-top:100px;
+}
+
+.search-video-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    place-items: center;
+    text-align: center;
+    padding: 10px;
+    font-size: 20px;
+    color: black;
+}
+
