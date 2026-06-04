@@ -1,12 +1,12 @@
 ﻿@using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
 
-<h3>We are here to Help</h3>
-<p>Please fill out the form below and our support team will get back to you as soon as possible.</p>
 
-<div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
-    <div class="card p-4 shadow mt-5" style="width: 100%; max-width: 450px;">
 
+<div class="container-fluid d-flex justify-content-center align-items-start min-vh-100">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 600px;">
+        <h3>We are here to help</h3>
+        <p>Please fill out the form below and our support team will get back to you as soon as possible.</p>
         <EditForm Model="@supportMessage"  OnValidSubmit="HandleSendMessage" FormName="ContactSupportForm">
             <DataAnnotationsValidator />
 

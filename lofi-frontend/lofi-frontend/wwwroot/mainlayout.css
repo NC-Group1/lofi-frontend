@@ -34,3 +34,43 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+
+.nav-links {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding:0;
+}
+
+.button-nav {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    text-decoration: none;
+    background: rgba(255, 175, 243, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 999px;
+    transition: all 0.25s ease;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+    .button-nav:hover {
+        color: white;
+        background: rgba(255,255,255,0.18);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        text-decoration: none;
+    }
+
+    .button-nav.active {
+        background: rgba(255,255,255,0.18);
+        border-color: rgba(255,255,255,0.3);
+        font-weight: 600;
+    }
+    .button-nav:visited {
+        background: rgba(255, 175, 243, 0.25);
+    }

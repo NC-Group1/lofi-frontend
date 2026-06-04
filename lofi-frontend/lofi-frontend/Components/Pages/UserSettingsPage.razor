@@ -4,7 +4,7 @@
 @using lofi_frontend.Components.Pages
 @using lofi_frontend.Components.Items
 
-<div class="page-container settings-page">
+<div class="settings-page">
 <div class="settings-layout">
  
 <nav class="settings-sidebar" aria-label="Settings navigation">
@@ -15,11 +15,11 @@
                 <button class="Delete-Account-button" type="button" aria-current="@(selectedSection == "DeleteAccount" ? "page" : null)" @onclick="DeleteAccount">Delete Account</button>
  </div>
  </nav>
-        
 
- <section class="content" aria-labelledby="settings-heading">
 
-                 <h1 id="settings-heading" class="text-center h4 mb-4">Settings</h1>
+        <section class="settings-content d-flex flex-column justify-content-top align-items-center" aria-labelledby="settings-heading">
+
+                 <h1 id="settings-heading" class="text-center mb-4">Settings</h1>
         @if (selectedSection == "")
         {
      <UserUpdatePasswordPage />
