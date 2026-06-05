@@ -1,0 +1,10 @@
+﻿.login-page {
+    background: linear-gradient( rgba(0,0,0,0.25), rgba(0,0,0,0.25) ), url('/images/login-bg.jpg');
+    min-height:95vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.login-layout{
+    padding-top: 100px
+}

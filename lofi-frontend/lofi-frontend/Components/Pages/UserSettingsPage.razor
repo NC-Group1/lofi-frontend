@@ -1,0 +1,94 @@
+﻿@using lofi_frontend.Models
+@page "/Settings"
+@rendermode InteractiveServer
+@using lofi_frontend.Components.Pages
+@using lofi_frontend.Components.Items
+
+<div class="settings-page">
+<div class="settings-layout">
+ 
+<nav class="settings-sidebar" aria-label="Settings navigation">
+        <div class="settings-sidebar-buttons">
+                <button class="changePassword-button" type="button" aria-current="@(selectedSection == "ChangePassword" ? "page" : null)" @onclick="ChangePassword">Change Password</button>
+                <button class="Details-button" type="button" aria-current="@(selectedSection == "UpdateDetails" ? "page" : null)" @onclick="UpdateDetails">Update Details</button>
+                <button class="Contact-Support-button" type="button" aria-current="@(selectedSection == "ContactSupport" ? "page" : null)" @onclick="ContactSupport">Contact Support</button>
+                <button class="Delete-Account-button" type="button" aria-current="@(selectedSection == "DeleteAccount" ? "page" : null)" @onclick="DeleteAccount">Delete Account</button>
+ </div>
+ </nav>
+
+
+        <section class="settings-content d-flex flex-column justify-content-top align-items-center" aria-labelledby="settings-heading">
+
+                 <h1 id="settings-heading" class="text-center mb-4">Settings</h1>
+        @if (selectedSection == "")
+        {
+     <UserUpdatePasswordPage />
+           
+        }
+        @if (selectedSection == "ChangePassword")
+    {
+        <UserUpdatePasswordPage Id = "@currentUserId"/>
+    }
+    @if(selectedSection == "UpdateDetails")
+    {
+        <UserUpdateDetailsPage/>
+
+    }
+        @if (selectedSection == "ContactSupport")
+    {
+        <UserContactSupportPage/>
+    }
+    @if(selectedSection == "DeleteAccount")
+    {
+        <UserDeleteAccountPage/>
+    }
+
+</section>
+</div>
+</div>
+
+
+
+
+@code {
+
+    private UserSettingsForm userSettings = new UserSettingsForm();
+    private string errorMessage = string.Empty;
+    private string selectedSection = "";
+    private int currentUserId = 1; // Placeholder for the current user's ID, replace with actual user ID retrieval logic
+
+
+    private void ChangePassword()
+    {
+        selectedSection = "ChangePassword";
+
+
+    }
+
+    private void UpdateDetails()
+    {
+        selectedSection = "UpdateDetails";
+
+    }
+    private void ContactSupport()
+    {
+        selectedSection = "ContactSupport";
+    }
+
+    private void DeleteAccount()
+    {
+        selectedSection = "DeleteAccount";
+    }
+
+    private async Task UpdateUserSettings()
+    {
+
+
+        return;
+    }
+
+}
+
+
+
+  

@@ -1,26 +1,13 @@
-﻿<nav class="navbar navbar-light bg-transparent">
+﻿<nav class="navbar navbar-light bg-transparent" aria-label="Main Navigation">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
             <img src="./images/CalicoLogo.png" alt="Logo image of calico cat" height="80"/>
         </a>
 
-        <p class="text-white text-shadow-lg display-1 fw-bold">Calico</p>
-
-        <div class="navbar-nav d-flex flex-row gap-5 me-2">
-            <NavLink class="nav-link btn btn text-white" href="/">Home</NavLink>
-
-            <AuthorizeView>
-                <Authorized>
-                    <NavLink class="nav-link btn text-white" href="/Dashboard">Dashboard</NavLink>
-                </Authorized>
-
-				<NotAuthorized>
-                    <NavLink class="nav-link btn text-white" href="/Login">Login</NavLink>
-				</NotAuthorized>
-			</AuthorizeView>
-
-            @* <NavLink class="nav-link btn-outline" href="/">Music</NavLink> *@
-            <NavLink class="nav-link btn-outline-light" href="/Search">Search</NavLink>
-        </div>
+        <ul class="navbar-nav nav-links">
+            <li><NavLink class="button-nav" href="/">Home</NavLink></li>
+            <li><NavLink class="button-nav" href="/Login">Login</NavLink></li>
+            <li><NavLink class="button-nav" href="/Search">Search</NavLink></li>
+        </ul>
     </div>
 </nav>
