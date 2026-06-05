@@ -9,12 +9,12 @@
 	</div>
 
 	@* Control/Search Container *@
-	<div class="control-container d-flex flex-row justify-content-evenly align-items-center w-100 px-5">
+	<section class="control-container d-flex flex-row justify-content-evenly align-items-center w-100 px-5" aria-label="Timer and video controls">
 
 		@* Timer Component *@
 		<div class="d-flex flex-column gap-2 justify-content-center align-items-center">
 			<div class="d-flex flex-row align-items-center gap-2">
-				<div class="">
+				<div aria-label="Task timer" class="">
 					<TaskTimerComponent @ref="TimerReference" />
 				</div>
 			</div>
@@ -23,19 +23,19 @@
 			<div class="d-flex flex-row gap-2 justify-content-center w-100">
 				@if (!IsPlaying)
 				{
-					<button class="btn btn-success btn-lg shadow-sm"
+					<button class="btn btn-success btn-lg shadow-sm" aria-label="Start timer and play video"
 							@onclick="StartTimerAndVideo">
-						<img src="images/play.png" style="filter: invert(1) brightness(2);" height="30" />
+						<img src="images/play.png" aria-hidden="true" style="filter: invert(1) brightness(2);" height="30" />
 					</button>
 				}
 				else
 				{
-					<button class="btn btn-danger btn-lg shadow-sm"
+					<button class="btn btn-danger btn-lg shadow-sm" aria-label="Pause timer and video"
 							@onclick="PauseTimerAndVideo">
-						<img src="images/pause.png" style="filter: invert(1) brightness(2);" height="30" />
+						<img src="images/pause.png" aria-hidden="true" style="filter: invert(1) brightness(2);" height="30" />
 					</button>
 				}
-				<button class="btn btn-dark btn-lg w-100" @onclick="ResetVideo">
+				<button class="btn btn-dark btn-lg w-100" aria-label="Restart video and reset timer" @onclick="ResetVideo">
 					Restart Video
 				</button>
 
@@ -47,7 +47,7 @@
 		</div>
 
 		@* Search Field *@
-	</div>
+	</section>
 </div>
 
 

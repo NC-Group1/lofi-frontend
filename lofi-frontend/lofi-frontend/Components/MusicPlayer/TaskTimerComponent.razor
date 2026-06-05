@@ -7,8 +7,10 @@
 
 <div class="display-6 fw-bold text-white font-monospace shadow-sm bg-dark bg-opacity-20 py-3 px-4 rounded-3">
 	<div class="d-flex flex-row align-content-center justify-content-center gap-4">
+		<div role="timer" aria-live="polite" aria-label="Task timer">
 		@TimerDisplay
-		<button class="btn p-0" style="filter: invert(1) brightness(2);" @onclick="Dispose">
+		</div>
+		<button class="btn p-0" style="filter: invert(1) brightness(2);" aria-label="Reset timer" @onclick="Dispose">
 			<img src="images/reset.png" height="30" />
 		</button>
 	</div>
