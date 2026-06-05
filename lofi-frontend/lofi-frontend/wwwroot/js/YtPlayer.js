@@ -14,6 +14,14 @@ window.initializeYouTubePlayer = (elementId, videoId) => {
             'rel': 0,
             'mute': 0,
         },
+        events: {
+            onReady: () => {
+                const iframe = document.getElementById(elementId).querySelector('iframe');
+                if (iframe) {
+                    iframe.setAttribute('title', 'Youtube music player');
+                }
+            }
+        }
     });
 };
 
