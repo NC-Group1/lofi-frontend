@@ -11,7 +11,8 @@
 	<div class="d-flex justify-content-center align-items-center w-100">
 		<div class="d-flex flex-row align-items-center gap-2">
 			<div class="ms-5">
-				<TaskTimerComponent @ref="TimerReference" />
+				<TaskTimerComponent @ref="TimerReference" 
+					OnPomodoroFinished="PauseTimerAndVideo" />
 			</div>
 		
 			<button class="btn p-0" @onclick="ResetTimer">
@@ -21,6 +22,20 @@
 	</div>
 
 	<div class="d-flex flex-row gap-2 justify-content-center">
+		
+		@if(!IsPlaying)
+		{
+			<button class="btn btn-warning btn-lg px-4 shadow-sm"
+			@onclick="StartPomodoroTimer">
+				Pomodoro
+			</button>
+		} else
+		{
+			<button class="btn btn-warning btn-lg px-4 shadow-sm"
+					@onclick="PauseTimerAndVideo">
+				Pomodoro
+			</button>
+		}
 		@if (!IsPlaying)
 		{
 			<button class="btn btn-success btn-lg px-4 shadow-sm"
@@ -54,6 +69,16 @@
 	private TaskTimerComponent TimerReference { get; set; }
 
 	private bool IsPlaying = false;
+
+	private async Task StartPomodoroTimer()
+	{
+		IsPlaying = true;
+		if (TimerReference != null && TimerReference != null)
+		{
+			await PlayerReference.Play();
+			await TimerReference.StartPomodoro();
+		}
+	}
 
 	private async Task StartTimerAndVideo()
 	{
