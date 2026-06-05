@@ -2,6 +2,7 @@
 @using lofi_frontend.Components.MusicPlayer
 @using lofi_frontend.Components.Pages.Search
 @using lofi_frontend.Models
+@using System.Text.RegularExpressions
 
 @inject IHttpClientFactory clientFactory;
 
@@ -17,10 +18,10 @@
 				GetSearchTerm="GetSearchTerm"
 				/>
 		</div>
-		<div class="container featured-moods-section home-card">
+		<div class=" featured-moods-section home-card">
 			<h3>Results</h3>
 
-			<SearchComponentList 
+			<SearchList 
 				@ref="SearchResultRef" 
 				YoutubeVideos="YoutubeVideos"
 				GetVideoCode="GetVideoCode"/>
@@ -38,7 +39,7 @@
 	private HttpClient httpClient { get; set; } = new();
 
 	private MusicPlayerComponent? MusicPlayerRef { get; set; }
-	private SearchComponentList? SearchResultRef { get; set; }
+	private SearchList? SearchResultRef { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -48,11 +49,15 @@
 
 	private async Task GetVideoCode(string videoCode)
 	{
-		Console.WriteLine("Getting video code to change video");
-		VideoCode = videoCode;
-		Console.WriteLine($"Code: {VideoCode}");
-		await MusicPlayerRef.LoadNewVideo(VideoCode);
-		await InvokeAsync(StateHasChanged);
+		if (MusicPlayerRef != null)
+		{
+			Console.WriteLine("Getting video code to change video");
+			// VideoCode = videoCode[^11..];
+			VideoCode = "n61ULEU7CO0";
+			Console.WriteLine($"Code: {VideoCode}");
+			await MusicPlayerRef.LoadNewVideo(VideoCode);
+			await InvokeAsync(StateHasChanged);
+		}
 	}
 
 	private async Task GetSearchTerm(string searchTerm)

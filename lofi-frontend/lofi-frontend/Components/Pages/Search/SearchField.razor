@@ -1,19 +1,20 @@
 ﻿@using lofi_frontend.Models
 @inject HttpClient Http
 
-<div class="d-flex flex-column justify-content-center align-items-center gap-3">
-<h3>Search Field</h3>
+<div class="d-flex flex-column justify-content-around align-content-center gap-3 h-100">
 
-<input class="input-group-text"
-	   @bind-value="searchBox"
-	   @bind-value:event="oninput"
-	   placeholder="Search..." />
+<input 
+    class="input-group-text py-4 px-4"
+    type="text"
+    @bind-value="searchBox"
+    @bind-value:event="oninput"
+    placeholder="Search..." />
 
-<button class="btn btn-dark" type="button" @onclick="ReturnSearchTerm">Search</button>
+<button class="btn btn-dark display-6 w-100 h-100" type="button" @onclick="ReturnSearchTerm">Search</button>
 
 </div>
 @code {
-    private string searchBox = "Focus";
+    private string searchBox = "Find a new mood...";
     private List<Music>? youtubeVideos;
     private string? errorMessage;
 

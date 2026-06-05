@@ -2,7 +2,7 @@
 @using lofi_frontend.Components.MusicPlayer
 @using lofi_frontend.Components.Layout
 
-<div class="d-flex flex-row flex-wrap gap-4 justify-content-center align-content-center">
+<div class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-stretch" >
 	@if (YoutubeVideos == null || YoutubeVideos.Count() <= 0)
 	{
 		<p>No videos found...</p>
@@ -11,8 +11,8 @@
 	{
 		@foreach (var youtube in YoutubeVideos)
 		{
-			<div class="hello">
-				<SearchResult YoutubeVideo="youtube" GetVideoCode="GetVideoCode"/>
+			<div class="flex-grow-1 d-flex flex-column" style="min-width: 100px; max-width: 200px;">
+				<SearchResult YoutubeVideo="youtube" GetVideoCode="GetVideoCode" />
 			</div>
 		}
 	}
@@ -24,4 +24,12 @@
 
 	[Parameter]
 	public EventCallback<string> GetVideoCode { get; set; }
+
+	public async Task TestVideoCode()
+	{
+		if (GetVideoCode.HasDelegate)
+		{
+			await GetVideoCode.InvokeAsync("n61ULEU7CO0");
+		}
+	}
 }
