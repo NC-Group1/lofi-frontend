@@ -1,0 +1,224 @@
+﻿@page "/pomodoro-timer"
+@using System.Timers
+@implements IDisposable
+@inject IJSRuntime JS
+@rendermode InteractiveAuto
+
+<div class="pomodoro-container">
+
+    <div class="display-1 fw-bold text-white font-monospace shadow-sm bg-dark bg-opacity-20 py-3 px-4 rounded-3">
+        @FormattedTime
+    </div>
+
+    <div class="mt-3">
+        <p class="text-white">@CounterText</p>
+        <button class="btn btn-warning" @onclick="ResetPomodoroCount">
+            Restart Counter
+        </button>
+    </div>
+
+    <div class="mt-3">
+        <button class="btn btn-primary me-2" @onclick="Work">
+            Work
+        </button>
+
+        <button class="btn btn-info" @onclick="Rest">
+            Rest
+        </button>
+    </div>
+
+    @if (ShowDurationSelection)
+    {
+        <div class="mt-3">
+            @foreach (var min in Durations[CurrentMode])
+            {
+                <button class="btn btn-outline-light me-2"
+                        @onclick="() => SelectDuration(min)">
+                    @min min
+                </button>
+            }
+        </div>
+    }
+
+    @if (ShowTimerArea)
+    {
+        <div class="mt-4">
+            <button class="btn btn-success me-2"
+                    @onclick="StartTimer">
+                Start
+            </button>
+
+            <button class="btn btn-danger me-2"
+                    @onclick="PauseTimer">
+                Pause
+            </button>
+
+            <button class="btn btn-warning"
+                    @onclick="StopTimer">
+                Stop
+            </button>
+        </div>
+    }
+
+</div>
+
+@code {
+
+    private System.Timers.Timer? _timer;
+
+    private string CurrentMode = "";
+    private int RemainingSeconds = 0;
+    private int PomodoroCount = 0;
+
+    private bool ShowDurationSelection = false;
+    private bool ShowTimerArea = false;
+
+    private readonly Dictionary<string, int[]> Durations = new()
+    {
+        { "work", new[] { 15, 30, 45, 60 } },
+        { "rest", new[] { 5, 15 } }
+    };
+
+    private string CounterText =>
+        $"Completed Pomodoros: {PomodoroCount}";
+
+    private string FormattedTime =>
+        $"{RemainingSeconds / 60:00}:{RemainingSeconds % 60:00}";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var storedValue = await JS.InvokeAsync<string>(
+            "localStorage.getItem",
+            "pomodoroCount");
+
+        PomodoroCount = int.TryParse(storedValue, out var count)
+            ? count
+            : 0;
+
+        _timer = new System.Timers.Timer(1000);
+        _timer.AutoReset = true;
+        _timer.Elapsed += Tick;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task SelectMode(string mode)
+    {
+        await PlayButtonSound();
+
+        _timer?.Stop();
+
+        CurrentMode = mode;
+        ShowDurationSelection = true;
+        ShowTimerArea = false;
+    }
+
+    private async Task SelectDuration(int minutes)
+    {
+        await PlayButtonSound();
+
+        RemainingSeconds = minutes * 60;
+
+        ShowDurationSelection = false;
+        ShowTimerArea = true;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task StartTimer()
+    {
+        await PlayButtonSound();
+
+        if (RemainingSeconds > 0)
+        {
+            _timer?.Start();
+        }
+    }
+
+    private async Task PauseTimer()
+    {
+        await PlayButtonSound();
+
+        _timer?.Stop();
+    }
+
+    private async Task StopTimer()
+    {
+        await PlayButtonSound();
+
+        _timer?.Stop();
+
+        RemainingSeconds = 0;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task Work() =>
+        SelectMode("work");
+
+    private Task Rest() =>
+        SelectMode("rest");
+
+    private async void Tick(object? sender, ElapsedEventArgs e)
+    {
+        if (RemainingSeconds > 0)
+        {
+            RemainingSeconds--;
+
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        _timer?.Stop();
+
+        RemainingSeconds = 0;
+
+        await PlayAlarmSound();
+
+        if (CurrentMode == "work")
+        {
+            PomodoroCount++;
+
+            await JS.InvokeVoidAsync(
+                "localStorage.setItem",
+                "pomodoroCount",
+                PomodoroCount.ToString());
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ResetPomodoroCount()
+    {
+        await PlayButtonSound();
+
+        _timer?.Stop();
+
+        PomodoroCount = 0;
+
+        await JS.InvokeVoidAsync(
+            "localStorage.setItem",
+            "pomodoroCount",
+            "0");
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private ValueTask PlayButtonSound() =>
+        JS.InvokeVoidAsync("pomodoro.playButtonSound");
+
+    private ValueTask PlayAlarmSound() =>
+        JS.InvokeVoidAsync("pomodoro.playAlarmSound");
+
+    public void Dispose()
+    {
+        if (_timer is not null)
+        {
+            _timer.Elapsed -= Tick;
+            _timer.Dispose();
+        }
+    }
+}
