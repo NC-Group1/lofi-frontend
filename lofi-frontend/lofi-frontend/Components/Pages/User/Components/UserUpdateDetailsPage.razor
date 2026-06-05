@@ -6,22 +6,25 @@
 
 <div class="container-fluid d-flex justify-content-center align-items-start min-vh-100">
     <div class="card p-4 shadow" style="width: 100%; max-width: 500px;">
+
+        <h2 class="mb-3">Update Your Details</h2>
+        
         @if (!string.IsNullOrEmpty(successMessage))
         {
-            <div class="alert alert-success">
+            <div class="alert alert-success" aria-live="polite">
                 @successMessage
             </div>
         }
 
         @if (!string.IsNullOrEmpty(errorMessage))
         {
-            <div class="alert alert-danger">@errorMessage</div>
+            <div class="alert alert-danger" aria-live="assertive" role="alert">@errorMessage</div>
         }
 
         @if (isLoading)
         {
             <div class="text-center p-3">
-                <div class="spinner-border text-primary" role="status"></div>
+                <div class="spinner-border text-primary" role="status" aria-label="Loading"></div>
                 <p class="mt-2">Loading user data...</p>
             </div>
         }
@@ -34,33 +37,43 @@
                 <DataAnnotationsValidator />
 
                 <div class="mb-3">
-                    <label for="firstname-input" class="form-label>">First Name</label>
+                    <label for="firstname-input" class="form-label">First Name</label>
                     <InputText id="firstname-input" class="form-control" @bind-Value="user.FirstName" />
-                    <div class="text-danger small"><ValidationMessage For="@(() => user.FirstName)" /></div>
+                    <div class="text-danger small" aria-live="polite">
+                        <ValidationMessage For="@(() => user.FirstName)" />
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="lastname-input" class="form-label">Last Name</label>
                     <InputText id="lastname-input" class="form-control" @bind-Value="user.LastName" />
-                    <div class="text-danger small"><ValidationMessage For="@(() => user.LastName)" /></div>
+                    <div class="text-danger small" aria-live="polite">
+                        <ValidationMessage For="@(() => user.LastName)" />
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="email-input" class="form-label">Email address</label>
                     <InputText id="email-input" type="email" class="form-control" @bind-Value="user.Email" />
-                    <div class="text-danger small"><ValidationMessage For="@(() => user.Email)" /></div>
+                    <div class="text-danger small" aria-live="polite">
+                        <ValidationMessage For="@(() => user.Email)" />
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="username-input" class="form-label">Username</label>
                     <InputText id="username-input" class="form-control" @bind-Value="user.Username" />
-                    <div class="text-danger small"><ValidationMessage For="@(() => user.Username)" /></div>
+                    <div class="text-danger small" aria-live="polite">
+                        <ValidationMessage For="@(() => user.Username)" />
+                    </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="Date-of-birth" class="form-label">Date of Birth</label>
-                    <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.Dob" />
-                    <div class="text-danger small"><ValidationMessage For="@(() => user.Dob)" /></div>
+                    <label for="dob-input" class="form-label">Date of Birth</label>
+                    <InputDate id="dob-input" class="form-control" @bind-Value="user.Dob" />
+                    <div class="text-danger small" aria-live="polite">
+                        <ValidationMessage For="@(() => user.Dob)" />
+                    </div>
                 </div>
 
                 <div class="mb-4">

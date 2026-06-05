@@ -1,9 +1,12 @@
 ﻿@using lofi_frontend.Models
 @inject HttpClient Http
 
-<div class="d-flex flex-row justify-content-around align-content-center gap-3 h-100">
+<form role="search" class="d-flex flex-column justify-content-around align-content-center gap-3 h-100">
+    
+    <label for="search-input" class="visually-hidden">Search</label>
 
-<InputText
+<input 
+    id="search-input"
     class="input-group-text w-100"
     type="text"
     @bind-value="searchBox"
@@ -11,7 +14,8 @@
 
 <button class="btn btn-dark display-6 w-50 h-100" type="button" @onclick="ReturnSearchTerm">Search</button>
 
-</div>
+</form>
+
 @code {
     private string searchBox = "";
     private List<Music>? youtubeVideos;

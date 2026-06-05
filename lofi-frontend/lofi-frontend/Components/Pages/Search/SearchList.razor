@@ -2,21 +2,23 @@
 @using lofi_frontend.Components.MusicPlayer
 @using lofi_frontend.Components.Layout
 
-<div class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-stretch" >
+<section aria-label="Search results">
 	@if (YoutubeVideos == null || YoutubeVideos.Count() <= 0)
 	{
-		<p>No videos found...</p>
+		<p aria-live"polite">No videos found...</p>
 	}
 	else
 	{
-		@foreach (var youtube in YoutubeVideos)
-		{
-			<div class="flex-grow-1 d-flex flex-column" style="min-width: 100px; max-width: 200px;">
-				<SearchResult YoutubeVideo="youtube" GetVideoCode="GetVideoCode" />
-			</div>
-		}
+		<ul class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-stretch">
+			@foreach (var youtube in YoutubeVideos)
+			{
+				<li class="flex-grow-1 d-flex flex-column" style="min-width: 100px; max-width: 200px;">
+					<SearchResult YoutubeVideo="youtube" GetVideoCode="GetVideoCode" />
+				</li>
+			}
+		</ul>
 	}
-</div>
+</section>
 
 @code {
 	[Parameter]

@@ -6,7 +6,7 @@
 
 <div class="dashboard-layout">
     
-    <aside class="sidebar">
+    <aside class="sidebar" aria-label="Dashboard navigation">
         <div class="user-card">
             <h2>@User.Username</h2>            
             <dl class="user-details">
@@ -21,9 +21,20 @@
         </div>
 
         <nav class="sidebar-buttons">
-            <button class="project-button" type="button" @onclick="ShowProjects">Projects</button>
-            <button class="playlist-button" type="button" @onclick="ShowPlaylists">Playlists</button>
-            <button class="fave-tracks-button" type="button" @onclick="ShowFaveTracks">Favourite Tracks</button>
+            <button class="project-button"
+                    aria-current="@(selectedSection == "projects" ? "page" : null)"
+                    @onclick="ShowProjects">Projects
+            </button>
+
+            <button class="playlist-button"
+                    aria-current="@(selectedSection == "playlists" ? "page" : null)"
+                    @onclick="ShowPlaylists">Playlists
+            </button>
+
+            <button class="fave-tracks-button"
+                    aria-current="@(selectedSection == "faveTracks" ? "page" : null)"
+                    @onclick="ShowFaveTracks">Favourite Tracks
+            </button>
         </nav>
 
         <section class="stats-card" aria-labelledby="stats-heading">
@@ -58,7 +69,7 @@
     </div>
     @if (!string.IsNullOrEmpty(errorMessage))
     {
-        <p>@errorMessage</p>
+        <p aria-live="assertive" role="alert">@errorMessage</p>
     }
 </div>
 

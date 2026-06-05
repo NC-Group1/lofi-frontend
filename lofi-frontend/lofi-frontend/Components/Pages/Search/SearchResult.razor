@@ -2,9 +2,9 @@
 @using lofi_frontend.Components.Layout
 
 <div class="search-video w-100 h-100">
-    <button class="card bg-transparent border-0 text-start h-100 w-100" @onclick="ReturnVideoCode">
+    <button class="card bg-transparent border-0 text-start h-100 w-100" @onclick="ReturnVideoCode" aria-label="Play video: @YoutubeVideo.Title">
         <div class="ratio ratio-4x3">
-            <img class="card-img rounded" src="@YoutubeVideo.Thumbnail" style="object-fit: cover;" alt="@YoutubeVideo.Title">
+            <img class="card-img rounded" src="@YoutubeVideo.Thumbnail" style="object-fit: cover;" alt="Thumbnail for @YoutubeVideo.Title">
         </div>
 
         <div class="card-body px-0 pt-2 w-100">
