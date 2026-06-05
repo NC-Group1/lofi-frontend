@@ -4,62 +4,64 @@
 
 @rendermode InteractiveServer
 
-@inject IHttpClientFactory clientFactory;
+@inject IHttpClientFactory clientFactory
 @inject NavigationManager NavigationManager;
+<div class="login-page">
+	<div class="login-layout">
+		<div class="container-fluid d-flex justify-content-center align-items-start">
+			<div class="card p-4 shadow mt-5" style="width: 100%; max-width: 450px;">
 
-<div class="login-layout">
-<div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
-    <div class="card p-4 shadow mt-5" style="width: 100%; max-width: 450px;">
+				<h1 class="text-center h4 mb-4">Log in to your account</h1>
 
-        <h3 class="text-center h4 mb-4">Log in to your account</h3>
+				<EditForm EditContext="editContext" OnValidSubmit="AuthenticateUser" FormName="Login Form">
+					<DataAnnotationsValidator />
 
-        <EditForm 
-			EditContext="editContext" 
-			OnValidSubmit="HandleSignIn" 
-			FormName="Login Form">
-            <DataAnnotationsValidator />
+					<div class="mb-3">
+						<label for="username_input" class="form-label" aria-required="true">Username</label>
+						<InputText id="username_input" @bind-Value="loginForm.Username" class="form-control" />
+						<div class="text-danger small"><ValidationMessage For="@(() => loginForm.Username)" /></div>
+					</div>
 
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                <InputText @bind-Value="loginForm.Username" class="form-control" />
-                <div class="text-danger small"><ValidationMessage For="@(() => loginForm.Username)" /></div>
-            </div>
+					<div class="mb-3">
+						<label for="password_input" class="form-label" aria-required="true">Password</label>
+						<InputText id="password_input" @bind-Value="loginForm.Password" class="form-control" type="password" />
+						<div class="text-danger small"><ValidationMessage For="@(() => loginForm.Password)" /></div>
+					</div>
 
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <InputText @bind-Value="loginForm.Password" class="form-control" type="password" />
-                <div class="text-danger small"><ValidationMessage For="@(() => loginForm.Password)" /></div>
-            </div>
+					<NavLink href="forgot-password" class="btn btn-outline-secondary w-100">
+						Forgot Password?
+					</NavLink>
+					@if (!string.IsNullOrEmpty(errorMessage))
+					{
+						<div class="alert alert-danger p-2 small text-center mb-3" role="alert" aria-live="assertive">
+							@errorMessage
+						</div>
+					}
 
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger p-2 small text-center mb-3" role="alert">
-                    @errorMessage
-                </div>
-            }
+					<div class="d-grid gap-2 mb-3">
+						<button class="btn btn-primary" type="submit">Login</button>
 
-            <div class="d-grid gap-2 mb-3">
-                <button class="btn btn-primary" type="submit">Login</button>
-
-                @* <button class="btn btn-outline-dark" type="button">
+						@* <button class="btn btn-outline-dark" type="button">
                     <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" style="width:16px; margin-right:8px; vertical-align:middle;" />
                     Login with Google
                     </button> *@
-            </div>
+					</div>
 
-            <hr />
+					<hr />
 
-            <div class="text-center">
-                <p class="mb-2 text-muted small">Don't have an account?</p>
-                <NavLink href="Signup" class="btn btn-outline-secondary w-100">
-                    Create an account
-                </NavLink>
-            </div>
+					<div class="text-center">
+						<p class="mb-2 text-muted small">Don't have an account?</p>
+						<NavLink href="Signup" class="btn btn-outline-secondary w-100">
+							Create an account
+						</NavLink>
+					</div>
 
-        </EditForm>
-    </div>
+				</EditForm>
+			</div>
+		</div>
+	</div>
 </div>
-</div>
+
 @code {
 	public HttpClient httpClient { get; set; } = new();
 

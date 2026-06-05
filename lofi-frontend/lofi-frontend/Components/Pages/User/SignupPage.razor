@@ -9,114 +9,111 @@
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
 <div class="signup-page">
-<div class="signup-layout">
-<div class="container-fluid d-flex justify-content-center align-items-start">
-    <div class="card p-4 shadow my-5" style="width: 100%; max-width: 500px;">
-        
-        <h1 class="text-center h3 mb-4">Create your account</h1>
-        <div aria-live="polite">
-        <EditForm 
-            EditContext="editContext"
-            OnValidSubmit="HandleSignup">
+	<div class="signup-layout">
+		<div class="container-fluid d-flex justify-content-center align-items-start">
+			<div class="card p-4 shadow my-5" style="width: 100%; max-width: 500px;">
+
+				<h1 class="text-center h3 mb-4">Create your account</h1>
+				<div aria-live="polite">
+					<EditForm EditContext="editContext"
+							  OnValidSubmit="HandleSignup">
+
+						<DataAnnotationsValidator />
+
+						<div class="mb-3">
+							<label for="firstname-input" class="form-label" aria-required="true">First Name</label>
+							<InputText id="firstname-input" class="form-control" @bind-Value="user.UserData.FirstName" />
+							<div class="text-danger small"><ValidationMessage For="@(() => user.UserData.FirstName)" /></div>
+						</div>
+
+						<div class="mb-3">
+							<label for="lastname-input" class="form-label" aria-required="true">Last Name</label>
+							<InputText id="lastname-input" class="form-control" @bind-Value="user.UserData.LastName" />
+							<div class="text-danger small"><ValidationMessage For="@(() => user.UserData.LastName)" /></div>
+						</div>
+
+						<div class="mb-3">
+							<label for="email-input" class="form-label" aria-required="true">Email address</label>
+							<InputText id="email-input" type="email" class="form-control" @bind-Value="user.UserData.Email" />
+							<div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Email)" /></div>
+						</div>
+
+						<div class="mb-3">
+							<label for="username-input" class="form-label" aria-required="true">Username</label>
+							<InputText id="username-input" class="form-control" @bind-Value="user.UserData.Username" />
+							<div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Username)" /></div>
+						</div>
+
+						<div class="mb-2">
+							<label for="password-input" class="form-label" aria-required="true">Password</label>
+							<InputText id="password-input"
+									   type="@(ShowPassword ? "text" : "password")"
+									   class="form-control"
+									   @bind-Value="user.Password" />
+							<div class="text-danger small"><ValidationMessage For="@(() => user.Password)" /></div>
+						</div>
+
             
-            <DataAnnotationsValidator />
+						<div class="mb-2">
+							<label for="confirm-password-input" class="form-label" aria-required="true">Confirm Password</label>
+							<InputText id="confirm-password-input"
+									   type="@(ShowPassword ? "text" : "password")"
+									   class="form-control"
+									   @bind-Value="ConfirmPassword" />
+							<div class="text-danger small"><ValidationMessage For="@(() => ConfirmPassword)" /></div>
+						</div>
 
-            <div class="mb-3">
-                <label for="firstname-input" class="form-label" aria-required="true">First Name</label>
-                <InputText id="firstname-input" class="form-control" @bind-Value="user.UserData.FirstName" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.FirstName)" /></div>
-            </div >
-
-            <div class="mb-3">
-                    <label for="lastname-input" class="form-label" aria-required="true">Last Name</label>
-                <InputText id="lastname-input" class="form-control" @bind-Value="user.UserData.LastName" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.LastName)" /></div>
-            </div>
-
-            <div class="mb-3">
-                    <label for="email-input" class="form-label" aria-required="true">Email address</label>
-                <InputText id="email-input" type="email" class="form-control" @bind-Value="user.UserData.Email" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Email)" /></div>
-            </div>
-
-            <div class="mb-3">
-                    <label for="username-input" class="form-label" aria-required="true">Username</label>
-                <InputText id="username-input" class="form-control" @bind-Value="user.UserData.Username" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Username)" /></div>
-            </div>
-
-            <div class="mb-2">
-                    <label for="password-input" class="form-label" aria-required="true">Password</label>
-                <InputText 
-                    id="password-input" 
-                    type="@(ShowPassword ? "text" : "password")"
-                    class="form-control"
-                    @bind-Value="user.Password" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.Password)" /></div>
-            </div>
-            
-            
-            <div class="mb-2">
-                    <label for="confirm-password-input" class="form-label" aria-required="true">Confirm Password</label>
-                <InputText 
-                    id="confirm-password-input" 
-                    type="@(ShowPassword ? "text" : "password")"
-                    class="form-control"
-                    @bind-Value="ConfirmPassword" />
-                <div class="text-danger small"><ValidationMessage For="@(() => ConfirmPassword)" /></div>
-            </div>
-            
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="showPassword" @bind="ShowPassword" />
-                <label class="form-check-label" for="showPassword">Show Password</label>
-            </div>
+						<div class="mb-3 form-check">
+							<input type="checkbox" class="form-check-input" id="showPassword" @bind="ShowPassword" />
+							<label class="form-check-label" for="showPassword">Show Password</label>
+						</div>
 
 
-            <div class="mb-3">
-                    <label for="Date-of-birth" class="form-label" aria-required="true">Date of Birth</label>
-                <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.UserData.Dob" />
-                <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Dob)" /></div>
-            </div>
+						<div class="mb-3">
+							<label for="Date-of-birth" class="form-label" aria-required="true">Date of Birth</label>
+							<InputDate id="Date-of-birth" class="form-control" @bind-Value="user.UserData.Dob" />
+							<div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Dob)" /></div>
+						</div>
 
-            <div class="mb-4">
-                    <label for="gender" class="form-label" aria-required="true">Gender</label>
-                <InputSelect id="gender" class="form-select" @bind-Value="user.UserData.Gender">
-                    @foreach (var gender in Enum.GetValues(typeof(Gender)))
-                    {
-                        <option value="@gender">
-                            @switch (gender)
-                            {
-                                case Gender.NonBinary:
-                                    @("Non-Binary")
-                                    break;
-                                case Gender.PreferNotToSay:
-                                    @("Prefer Not To Say")
-                                    break;
-                                default:
-                                    @gender.ToString()
-                                    break;
-                            }
-                        </option>
-                    }
-                </InputSelect>
-            </div>
+						<div class="mb-4">
+							<label for="gender" class="form-label" aria-required="true">Gender</label>
+							<InputSelect id="gender" class="form-select" @bind-Value="user.UserData.Gender">
+								@foreach (var gender in Enum.GetValues(typeof(Gender)))
+								{
+									<option value="@gender">
+										@switch (gender)
+										{
+											case Gender.NonBinary:
+												@("Non-Binary")
+												break;
+											case Gender.PreferNotToSay:
+												@("Prefer Not To Say")
+												break;
+											default:
+												@gender.ToString()
+												break;
+										}
+									</option>
+								}
+							</InputSelect>
+						</div>
 
-            <button class="btn btn-primary w-100 mb-3" type="submit">Sign Up</button>
-            
-            <hr />
+						<button class="btn btn-primary w-100 mb-3" type="submit">Sign Up</button>
 
-            <div class="text-center">
-                <p class="mb-2 text-muted">Already have an account?</p>
-                <NavLink href="Login" class="btn btn-outline-secondary w-100">
-                    Log in
-                </NavLink>
-            </div>
+						<hr />
 
-        </EditForm>
-            </div>
-    </div>
-</div>
-</div>
+						<div class="text-center">
+							<p class="mb-2 text-muted">Already have an account?</p>
+							<NavLink href="Login" class="btn btn-outline-secondary w-100">
+								Log in
+							</NavLink>
+						</div>
+
+					</EditForm>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 @code {
 	public UserWithPassword? user { get; set; }
@@ -173,12 +170,12 @@
 		var uri = "https://localhost:7245/Users";
 		try
 		{
-            var request = new HttpRequestMessage(HttpMethod.Post, uri)
-            {
-                Content = JsonContent.Create(user)
-            };
+			var request = new HttpRequestMessage(HttpMethod.Post, uri)
+			{
+				Content = JsonContent.Create(user)
+			};
 
-            request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
+			request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
 
 			var response = await HttpClient.SendAsync(request);
 
@@ -186,14 +183,14 @@
 			{
 				Console.WriteLine("User creation failed. Do you already have an account?");
 				Console.WriteLine(await response.Content.ReadAsStringAsync());
-            }
+			}
 
 			NavigationManager.NavigateTo($"/UserDashboard/{user.UserData.Id}");
 		}
 		catch (Exception ex)
 		{
 			Console.WriteLine($"Error creating user: {ex.Message}");
-            return;
+			return;
 		}
 	}
 

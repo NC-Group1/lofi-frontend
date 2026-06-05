@@ -8,7 +8,8 @@
 
 @rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Calico LoFi</PageTitle>
+
 <div class="home-page page-container">
 	<div class="home-layout">
 		<div class="d-flex flex-column gap-5">			
@@ -21,6 +22,7 @@
 		<div class=" featured-moods-section home-card">
 			<h3>Results</h3>
 
+		<SearchField GetSearchTerm="GetSearchTerm"/>
 			<SearchList 
 				@ref="SearchResultRef" 
 				YoutubeVideos="YoutubeVideos"
