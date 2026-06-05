@@ -6,13 +6,9 @@
 }
 
 .home-layout {
-    padding-top: 150px;
-}
-
-.home-layout {
-    padding: 140px 40px 40px;
+    padding: 100px  40px;
     display: grid;
-    gap: 2rem;
+    gap: 1rem;
     grid-template-columns: 1fr;
     grid-template-areas:
         "welcome"

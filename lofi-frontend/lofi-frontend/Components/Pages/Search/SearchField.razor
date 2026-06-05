@@ -7,18 +7,17 @@
 
 <input 
     id="search-input"
-    class="input-group-text py-4 px-4"
+    class="input-group-text w-100"
     type="text"
     @bind-value="searchBox"
-    @bind-value:event="oninput"
-    placeholder="Search..." />
+    placeholder="Find a new mood..." />
 
-<button class="btn btn-dark display-6 w-100 h-100" type="button" @onclick="ReturnSearchTerm">Search</button>
+<button class="btn btn-dark display-6 w-50 h-100" type="button" @onclick="ReturnSearchTerm">Search</button>
 
 </form>
 
 @code {
-    private string searchBox = "Find a new mood...";
+    private string searchBox = "";
     private List<Music>? youtubeVideos;
     private string? errorMessage;
 
@@ -32,7 +31,6 @@
         }
 
     }
-
 
     // protected override async Task OnInitializedAsync()
     // {

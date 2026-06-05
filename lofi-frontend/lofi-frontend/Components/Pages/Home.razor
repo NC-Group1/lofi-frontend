@@ -12,15 +12,16 @@
 
 <div class="home-page page-container">
 	<div class="home-layout">
-		<div class="d-flex flex-column gap-5">			
+		<div class="d-flex flex-column">			
 			<MusicPlayerComponent 
 				@ref="MusicPlayerRef" 
 				VideoCode="@VideoCode" 
 				GetSearchTerm="GetSearchTerm"
 				/>
 		</div>
+
 		<div class=" featured-moods-section home-card">
-			<h3>Results</h3>
+			@* <h3>Results</h3> *@
 
 		<SearchField GetSearchTerm="GetSearchTerm"/>
 			<SearchList 
@@ -33,8 +34,8 @@
 </div>
 
 @code {
-	private string VideoCode = "ZvJQt559CTY";
-	private string SearchTerm { get; set; } = "Focus";
+	private string VideoCode = "n61ULEU7CO0";
+	private string SearchTerm { get; set; } = "";
 	private string? errorMessage { get; set; }
 	private List<Music>? YoutubeVideos { get; set; }
 
@@ -54,8 +55,8 @@
 		if (MusicPlayerRef != null)
 		{
 			Console.WriteLine("Getting video code to change video");
-			// VideoCode = videoCode[^11..];
-			VideoCode = "n61ULEU7CO0";
+			VideoCode = videoCode[^11..];
+			// VideoCode = "n61ULEU7CO0";
 			Console.WriteLine($"Code: {VideoCode}");
 			await MusicPlayerRef.LoadNewVideo(VideoCode);
 			await InvokeAsync(StateHasChanged);
