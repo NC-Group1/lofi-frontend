@@ -7,12 +7,13 @@
 
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
+<div class="signup-page">
 <div class="signup-layout">
-<div class="container-fluid d-flex justify-content-center align-items-start bg-info min-vh-100">
+<div class="container-fluid d-flex justify-content-center align-items-start">
     <div class="card p-4 shadow my-5" style="width: 100%; max-width: 500px;">
         
         <h1 class="text-center h3 mb-4">Create your account</h1>
-
+        <div aria-live="polite">
         <EditForm 
             EditContext="editContext"
             OnValidSubmit="HandleSignup">
@@ -20,31 +21,31 @@
             <DataAnnotationsValidator />
 
             <div class="mb-3">
-                <label for="firstname-input" class="form-label">First Name</label>
+                <label for="firstname-input" class="form-label" aria-required="true">First Name</label>
                 <InputText id="firstname-input" class="form-control" @bind-Value="user.UserData.FirstName" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.FirstName)" /></div>
             </div >
 
             <div class="mb-3">
-                <label for="lastname-input" class="form-label">Last Name</label>
+                    <label for="lastname-input" class="form-label" aria-required="true">Last Name</label>
                 <InputText id="lastname-input" class="form-control" @bind-Value="user.UserData.LastName" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.LastName)" /></div>
             </div>
 
             <div class="mb-3">
-                <label for="email-input" class="form-label">Email address</label>
+                    <label for="email-input" class="form-label" aria-required="true">Email address</label>
                 <InputText id="email-input" type="email" class="form-control" @bind-Value="user.UserData.Email" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Email)" /></div>
             </div>
 
             <div class="mb-3">
-                <label for="username-input" class="form-label">Username</label>
+                    <label for="username-input" class="form-label" aria-required="true">Username</label>
                 <InputText id="username-input" class="form-control" @bind-Value="user.UserData.Username" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Username)" /></div>
             </div>
 
             <div class="mb-2">
-                <label for="password-input" class="form-label">Password</label>
+                    <label for="password-input" class="form-label" aria-required="true">Password</label>
                 <InputText 
                     id="password-input" 
                     type="@(ShowPassword ? "text" : "password")"
@@ -55,9 +56,9 @@
             
             
             <div class="mb-2">
-                <label for="password-input" class="form-label">Confirm Password</label>
+                    <label for="confirm-password-input" class="form-label" aria-required="true">Confirm Password</label>
                 <InputText 
-                    id="password-input" 
+                    id="confirm-password-input" 
                     type="@(ShowPassword ? "text" : "password")"
                     class="form-control"
                     @bind-Value="ConfirmPassword" />
@@ -71,13 +72,13 @@
 
 
             <div class="mb-3">
-                <label for="Date-of-birth" class="form-label">Date of Birth</label>
+                    <label for="Date-of-birth" class="form-label" aria-required="true">Date of Birth</label>
                 <InputDate id="Date-of-birth" class="form-control" @bind-Value="user.UserData.Dob" />
                 <div class="text-danger small"><ValidationMessage For="@(() => user.UserData.Dob)" /></div>
             </div>
 
             <div class="mb-4">
-                <label for="gender" class="form-label">Gender</label>
+                    <label for="gender" class="form-label" aria-required="true">Gender</label>
                 <InputSelect id="gender" class="form-select" @bind-Value="user.UserData.Gender">
                     @foreach (var gender in Enum.GetValues(typeof(Gender)))
                     {
@@ -111,7 +112,9 @@
             </div>
 
         </EditForm>
+            </div>
     </div>
+</div>
 </div>
 </div>
 @code {

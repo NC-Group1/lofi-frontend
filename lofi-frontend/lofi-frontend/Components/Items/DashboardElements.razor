@@ -2,56 +2,65 @@
 @using lofi_frontend.Models.Enum
 @inject HttpClient httpClient
 @rendermode InteractiveServer
+@using lofi_frontend.Components.Items
 
 
 <div class="dashboard-layout">
     
-    <div class="sidebar">
+    <aside class="sidebar">
         <div class="user-card">
             <h2>@User.Username</h2>
-            <h6>@User.FirstName @User.LastName</h6>
-            <h6>@User.Dob.ToString("dd/mm/yyyy")</h6>
-            <h6>@User.Gender</h6>
-            <p>@User.Email</p>
-        <NavLink href="@($"/Settings")">
-        <button class="user-setting-button" type="button">Account Settings</button>
-        </NavLink>
+            <dl class="user-details">
+                <dd>@User.FirstName @User.LastName</dd>
+                <dd>@User.Dob.ToString("dd/MM/yyyy")</dd>
+                <dd>@User.Gender</dd>
+                <p>@User.Email</p>
+            </dl>
+            <NavLink href="/Settings">
+                <button class="user-setting-button" type="button">Account Settings</button>
+            </NavLink>
         </div>
-        <div class="sidebar-buttons">
-        <button class="project-button" type="button" @onclick="ShowProjects">Projects</button>
-        <button class="playlist-button" type="button" @onclick="ShowPlaylists">Playlists</button>
-        <button class="fave-tracks-button" type="button" @onclick="ShowFaveTracks">Favourite Tracks</button>
-        </div>
-        <div class="stats-card">
-            <div class="stat-item">
+
+        <nav class="sidebar-buttons">
+            <button class="project-button" type="button" @onclick="ShowProjects">Projects</button>
+            <button class="playlist-button" type="button" @onclick="ShowPlaylists">Playlists</button>
+            <button class="fave-tracks-button" type="button" @onclick="ShowFaveTracks">Favourite Tracks</button>
+        </nav>
+
+        <section class="stats-card" aria-labelledby="stats-heading">
+            @* <div class="stat-item">
                 <span class="stat-label">Time Worked</span>
                 <span class="stat-value">@timerList.Count</span>
-            </div>
+            </div> *@
 
             <div class="stat-item">
-                <span class="stat-label">Projects</span>
+                <h3 class="stat-label">Projects</h3>
                 <span class="stat-value">@projects.Count</span>
             </div>
-        </div>
-</div>
-<div class="content">
-    @if(selectedSection == "projects")
+        </section>
+    </aside>
+    <div class="content">
+        @if(selectedSection == "")
+        {
+            <h1 class="dashboard-title">@User.FirstName's Dashboard</h1>
+        }
+        @if(selectedSection == "projects")
+        {
+            <ProjectsSummaryList Projects="@projects" />
+        }
+        @if(selectedSection == "playlists")
+        {
+            <PlaylistsSummaryList Playlists="@playlists" />
+        }
+        @if(selectedSection == "faveTracks")
+        {
+            <FaveTracksSummaryList Musics="@faveTracks" />
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(errorMessage))
     {
-        <ProjectsSummaryList Projects="@projects" />
+        <p>@errorMessage</p>
     }
-    @if(selectedSection == "playlists")
-    {
-        <PlaylistsSummaryList Playlists="@playlists" />
-    }
-    @if(selectedSection == "faveTracks")
-    {
-        <FaveTracksSummaryList Musics="@faveTracks" />
-    }
-</div>
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-    <p>@errorMessage</p>
-}
 </div>
 
 

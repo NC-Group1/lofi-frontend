@@ -1,22 +1,26 @@
-﻿
+﻿.settings-page {
+    background: linear-gradient( rgba(0,0,0,0.25), rgba(0,0,0,0.25) ), url('/images/settings-bg.jpg');
+    min-height: 95vh;
+    background-size: cover;
+    background-position: center;
+}
+
 .settings-layout {
     display: grid;
     grid-template-columns: 360px 1fr;
     min-height: 100vh;
-    background: #f6efe8;
-    font-family: 'Segoe UI', sans-serif;
-    color: #4b3f3f;
+    color: black;
     padding-top: 100px;
 }
-
+.settings-layout h1{
+    color: white;
+}
 
 .settings-sidebar {
-    background: #d9c7b8;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    border-right: 2px solid #c7b3a3;
+    padding: 2rem;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255,255,255,0.1);
 }
 
 .settings-sidebar-buttons {
@@ -25,22 +29,24 @@
     gap: 1rem;
 }
 
-    .settings-sidebar-buttons button
-    {
-        background: #b7d3c0;
-        border: none;
+    .settings-sidebar-buttons button {
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.15);
+        backdrop-filter: blur(12px);
+        color: white;
         padding: 1rem;
-        border-radius: 14px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        color: #3e4a42;
-        font-weight: 600;
+        border-radius: 16px;
+        transition: all 0.25s ease;
+        margin: 5px;
     }
 
-        .settings-sidebar-buttons button:hover
-         {
-            background: #a3c5af;
-            transform: translateY(-2px);
+        .settings-sidebar-buttons button:hover {
+            background: rgba(255,255,255,0.28);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
+.settings-content {
+    padding-top: 2vh;
+    
+}

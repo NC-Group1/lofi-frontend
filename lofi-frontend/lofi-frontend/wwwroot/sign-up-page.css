@@ -1,4 +1,10 @@
 ﻿/*SignUp Page Styling*/
+.signup-page {
+    background: linear-gradient( rgba(0,0,0,0.25), rgba(0,0,0,0.25) ), url('/images/signup-bg.png');
+    min-height: 95vh;
+    background-size: cover;
+    background-position: center;
+}
 .signup-layout{
     padding-top: 100px;
 }
