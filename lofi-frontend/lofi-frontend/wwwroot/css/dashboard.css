@@ -9,7 +9,7 @@
 }
 
 .dashboard-layout {
-    padding-top: 100px;
+    padding-top: 70px;
     display: grid;
     grid-template-columns: 320px 1fr;
     min-height: 100vh;
