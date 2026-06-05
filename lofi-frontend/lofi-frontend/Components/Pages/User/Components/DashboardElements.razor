@@ -2,14 +2,13 @@
 @using lofi_frontend.Models.Enum
 @inject HttpClient httpClient
 @rendermode InteractiveServer
-@using lofi_frontend.Components.Items
 
 
 <div class="dashboard-layout">
     
     <aside class="sidebar">
         <div class="user-card">
-            <h2>@User.Username</h2>
+            <h2>@User.Username</h2>            
             <dl class="user-details">
                 <dd>@User.FirstName @User.LastName</dd>
                 <dd>@User.Dob.ToString("dd/MM/yyyy")</dd>

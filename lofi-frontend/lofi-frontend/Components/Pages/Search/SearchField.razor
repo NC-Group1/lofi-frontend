@@ -1,0 +1,55 @@
+﻿@using lofi_frontend.Models
+@inject HttpClient Http
+
+<div class="d-flex flex-column justify-content-around align-content-center gap-3 h-100">
+
+<input 
+    class="input-group-text py-4 px-4"
+    type="text"
+    @bind-value="searchBox"
+    @bind-value:event="oninput"
+    placeholder="Search..." />
+
+<button class="btn btn-dark display-6 w-100 h-100" type="button" @onclick="ReturnSearchTerm">Search</button>
+
+</div>
+@code {
+    private string searchBox = "Find a new mood...";
+    private List<Music>? youtubeVideos;
+    private string? errorMessage;
+
+    [Parameter] public EventCallback<string> GetSearchTerm { get; set; }
+
+    private async Task ReturnSearchTerm()
+    {
+        if (this.GetSearchTerm.HasDelegate)
+        {
+            await this.GetSearchTerm.InvokeAsync(this.searchBox);
+        }
+
+    }
+
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     await GetVideo();
+    // }
+
+    // private async Task GetVideo()
+    // {
+    //     try
+    //     {
+    //         errorMessage = null;
+
+    //         youtubeVideos = await Http.GetFromJsonAsync<List<Music>>(
+    //             $"https:localhost:7245/Youtube?search={Uri.EscapeDataString(searchBox)}"
+    //         );
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         errorMessage = $"Could not load videos: {ex.Message}";
+    //         youtubeVideos = new List<Music>();
+    //     }
+    // }
+
+}

@@ -1,13 +1,11 @@
 ﻿@using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
 
-
-
 <div class="container-fluid d-flex justify-content-center align-items-start min-vh-100">
     <div class="card p-4 shadow" style="width: 100%; max-width: 600px;">
         <h3>We are here to help</h3>
         <p>Please fill out the form below and our support team will get back to you as soon as possible.</p>
-        <EditForm Model="@supportMessage"  OnValidSubmit="HandleSendMessage" FormName="ContactSupportForm">
+        <EditForm Model="@supportMessage" OnValidSubmit="HandleSendMessage" FormName="ContactSupportForm">
             <DataAnnotationsValidator />
 
             <div class="mb-3">
@@ -24,10 +22,10 @@
                 <label for="countryCode" class="form-label text-muted small fw-bold">Country Code</label>
                 <div class="phone-input-group">
                     <InputSelect id="countryCode" class="form-select country-select-box" @bind-Value="supportMessage.SelectedCountry">
-                        @foreach(var country in Enum.GetValues(typeof(CountryCode)))
+                        @foreach (var country in Enum.GetValues(typeof(CountryCode)))
                         {
                             <option value="@country">
-                                @switch(country)
+                                @switch (country)
                                 {
                                     case CountryCode.US:
                                         @:United States (+1)
@@ -50,14 +48,13 @@
                                     default:
                                         @:Unknown
                                         break;
-                                }
-    )
+                                })
 
 
                             </option>
                         }
-)
-                     </InputSelect>   
+                        )
+                    </InputSelect>
                 </div>
                 <label for="phoneNumber" class="form-label text-muted small fw-bold">Phone Number</label>
                 <InputText id="phoneNumber" class="form-control phone-number-input" @bind-Value="supportMessage.PhoneNumber" />
@@ -65,20 +62,14 @@
 
             <div class="mb-3">
                 <label class="form-label">Message</label>
-                <InputTextArea @bind-Value="supportMessage.Message" class="form-control message-text-area" rows="5" placeholder="Enter your message here..."/>
+                <InputTextArea @bind-Value="supportMessage.Message" class="form-control message-text-area" rows="5" placeholder="Enter your message here..." />
             </div>
 
-           
+
 
             <div class="d-grid gap-2 mb-3">
                 <button class="btn btn-primary" type="submit">SEND MESSAGE</button>
-
-               
             </div>
-
-            <hr />
-
-
         </EditForm>
     </div>
 </div>
@@ -89,11 +80,6 @@
 
     public  Task HandleSendMessage()
     {
-        // Here you would typically gather the form data and send it to your backend API
-        // For example:
-        // var supportMessage = new SupportMessage { Name = name, Email = email, PhoneNumber = phoneNumber, Message = message };
-        // await httpClient.PostAsJsonAsync("api/support", supportMessage);
-        // For now, we'll just display a success message
         Console.WriteLine("Support message sent successfully!");
         return Task.CompletedTask;
     }

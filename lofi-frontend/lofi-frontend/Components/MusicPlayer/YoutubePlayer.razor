@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime JS
+﻿@using System.Text.RegularExpressions
+@inject IJSRuntime JS
 
 <div id="yt-player" class="w-100 h-100"></div>
 
@@ -12,10 +13,21 @@
 		{
 			await Task.Delay(500);
 			await JS.InvokeVoidAsync("initializeYouTubePlayer", "yt-player", VideoCode);
-		}	
+		}
 	}
 
 	public async Task Play() => await JS.InvokeVoidAsync("playYouTubeVideo");
 	public async Task Pause() => await JS.InvokeVoidAsync("stopYouTubeVideo");
 	public async Task ResetTime() => await JS.InvokeVoidAsync("resetSeeker");
+	public async Task LoadNewVideo(string code) 
+	{
+		try
+		{
+			await JS.InvokeVoidAsync("loadVideoById", code);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("Exception during Youtube Player LoadVideo execution" + ex.Message);
+		}
+	}
 }

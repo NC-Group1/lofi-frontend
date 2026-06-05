@@ -5,13 +5,19 @@
 @inject HttpClient HttpClient
 @inject IJSRuntime JS
 
-<div class="display-1 fw-bold text-white font-monospace shadow-sm bg-dark bg-opacity-20 py-3 px-4 rounded-3">
-	@TimerDisplay
+<div class="display-6 fw-bold text-white font-monospace shadow-sm bg-dark bg-opacity-20 py-3 px-4 rounded-3">
+	<div class="d-flex flex-row align-content-center justify-content-center gap-4">
+		@TimerDisplay
+		<button class="btn p-0" style="filter: invert(1) brightness(2);" @onclick="Dispose">
+			<img src="images/reset.png" height="30" />
+		</button>
+	</div>
 </div>
 
 @code {
 	private System.Timers.Timer? _timer { get; set; } = null;
 	private TaskTimer _taskTimer { get; set; } = new TaskTimer();
+	public bool IsCounting { get; set; } = false;
 
 	private string TimerDisplay => new TimeSpan(0, 0, _taskTimer.Duration).ToString("c");
 
@@ -32,6 +38,7 @@
 		{
 			Console.WriteLine("Starting Timer");
 			_timer?.Start();
+			IsCounting = true;
 
 		} else {
 			Console.WriteLine("Timer already running");
@@ -50,6 +57,7 @@
 		if (_timer?.Enabled ?? false) {
 			Console.WriteLine("Stopping Timer");
 			_timer.Stop();
+			IsCounting = false;
 		}
 		else
 		{

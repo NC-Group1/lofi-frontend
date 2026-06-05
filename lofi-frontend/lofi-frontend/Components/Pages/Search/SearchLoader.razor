@@ -3,12 +3,7 @@
 @using lofi_frontend.Components.Layout
 @inject HttpClient Http
 
-<div class="search-layout">
-<input @bind-value="searchBox"
-       @bind-value:event="oninput"
-       placeholder="Search..." />
-
-<button type="button" @onclick="GetVideo">Search</button>
+<SearchField></SearchField>
 
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
@@ -25,9 +20,8 @@ else if (!youtubeVideos.Any())
 }
 else
 {
-    <SearchComponentList YoutubeVideos="youtubeVideos" />
+    <SearchList YoutubeVideos="youtubeVideos" />
 }
-</div>
 @code {
     private string searchBox = "Focus";
     private List<Music>? youtubeVideos;
@@ -45,7 +39,7 @@ else
             errorMessage = null;
 
             youtubeVideos = await Http.GetFromJsonAsync<List<Music>>(
-                $"https://localhost:7245/Youtube?search={Uri.EscapeDataString(searchBox)}"
+                $"https:localhost:7245/Youtube?search={Uri.EscapeDataString(searchBox)}"
             );
         }
         catch (Exception ex)

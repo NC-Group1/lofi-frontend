@@ -1,34 +1,99 @@
 ﻿@page "/"
-@using lofi_frontend.Components.Items
+@using lofi_frontend.Components.MusicPlayer
+@using lofi_frontend.Components.Pages.Search
+@using lofi_frontend.Models
+@using System.Text.RegularExpressions
+
+@inject IHttpClientFactory clientFactory;
 
 @rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
-<div class="page-container home-page">
-	
-	<div class="home-layout">
-		
-		<div class="welcome-message">
-			<h2>Welcome to Calico ☕</h2>
-			<p>
-				Focus, relax and track your projects
-				with curated lo-fi playlists.
-			</p>
-		</div>
-		<div class="now-playing home-card">
-			<h3>🎵 Now Playing</h3>
-		</div>
-		<div class="music-player home-card">
-			<MusicPlayerComponent VideoCode="@VideoCode" />
-		</div>
-		<div class="featured-moods-section">
-			<h3>Featured Moods</h3>
+<PageTitle>Calico LoFi</PageTitle>
 
-			<FeaturedMoodsComponent />
+<div class="home-page page-container">
+	<div class="home-layout">
+		<div class="d-flex flex-column gap-5">			
+			<MusicPlayerComponent 
+				@ref="MusicPlayerRef" 
+				VideoCode="@VideoCode" 
+				GetSearchTerm="GetSearchTerm"
+				/>
+		</div>
+		<div class=" featured-moods-section home-card">
+			<h3>Results</h3>
+
+		<SearchField GetSearchTerm="GetSearchTerm"/>
+			<SearchList 
+				@ref="SearchResultRef" 
+				YoutubeVideos="YoutubeVideos"
+				GetVideoCode="GetVideoCode"/>
+
 		</div>
 	</div>
 </div>
 
 @code {
 	private string VideoCode = "ZvJQt559CTY";
+	private string SearchTerm { get; set; } = "Focus";
+	private string? errorMessage { get; set; }
+	private List<Music>? YoutubeVideos { get; set; }
+
+	private HttpClient httpClient { get; set; } = new();
+
+	private MusicPlayerComponent? MusicPlayerRef { get; set; }
+	private SearchList? SearchResultRef { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		clientFactory.CreateClient("BackendApi");
+		await GetVideo();
+	}
+
+	private async Task GetVideoCode(string videoCode)
+	{
+		if (MusicPlayerRef != null)
+		{
+			Console.WriteLine("Getting video code to change video");
+			// VideoCode = videoCode[^11..];
+			VideoCode = "n61ULEU7CO0";
+			Console.WriteLine($"Code: {VideoCode}");
+			await MusicPlayerRef.LoadNewVideo(VideoCode);
+			await InvokeAsync(StateHasChanged);
+		}
+	}
+
+	private async Task GetSearchTerm(string searchTerm)
+	{
+		Console.WriteLine("Getting Search");
+		SearchTerm = searchTerm;
+		Console.WriteLine($"Search: {searchTerm}");
+		Console.WriteLine("Searching for videos");
+		await GetVideo();
+	}
+
+	private async Task GetVideo()
+	{
+		Console.WriteLine("attempting to search for videos");
+		try
+		{
+			errorMessage = null;
+			Console.WriteLine("Creating request");
+
+			var request = new HttpRequestMessage(
+				HttpMethod.Get, " https://localhost:7245/Youtube" + $"?search={SearchTerm}"
+			);
+
+			Console.WriteLine($"Request Info: URL {request.RequestUri}");
+
+			var response = await httpClient.SendAsync(request);
+
+			YoutubeVideos = await response.Content.ReadFromJsonAsync<List<Music>>();
+
+		}
+        catch (Exception ex)
+        {
+            errorMessage = $"Could not load videos: {ex.Message}";
+            YoutubeVideos = new List<Music>();
+        }
+    }
 }

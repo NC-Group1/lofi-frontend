@@ -1,0 +1,129 @@
+﻿@using lofi_frontend.Components.Pages.Search
+
+<div class="home-card d-flex flex-column gap-3 justify-content-center align-items-center">
+
+		<div class="col-12 col-xl-10 col-xxl-8 w-100">
+		<div class="ratio ratio-16x9 rounded-3 shadow">
+			<YoutubePlayer @ref="PlayerReference" VideoCode="@VideoCode" />
+		</div>
+	</div>
+
+	@* Control/Search Container *@
+	<div class="control-container d-flex flex-row justify-content-evenly align-items-center w-100 px-5">
+
+		@* Timer Component *@
+		<div class="d-flex flex-column gap-2 justify-content-center align-items-center">
+			<div class="d-flex flex-row align-items-center gap-2">
+				<div class="">
+					<TaskTimerComponent @ref="TimerReference" />
+				</div>
+			</div>
+
+			@* Timer Buttons *@
+			<div class="d-flex flex-row gap-2 justify-content-center w-100">
+				@if (!IsPlaying)
+				{
+					<button class="btn btn-success btn-lg shadow-sm"
+							@onclick="StartTimerAndVideo">
+						<img src="images/play.png" style="filter: invert(1) brightness(2);" height="30" />
+					</button>
+				}
+				else
+				{
+					<button class="btn btn-danger btn-lg shadow-sm"
+							@onclick="PauseTimerAndVideo">
+						<img src="images/pause.png" style="filter: invert(1) brightness(2);" height="30" />
+					</button>
+				}
+				<button class="btn btn-dark btn-lg w-100" @onclick="ResetVideo">
+					Restart Video
+				</button>
+
+				@* <button class="btn btn-dark btn-lg px-4 shadow-sm d-flex align-items-center gap-2"
+						@onclick="SaveTask">
+					Save Task
+				</button> *@
+			</div>
+		</div>
+
+		@* Search Field *@
+	</div>
+</div>
+
+
+@code {
+	[Parameter]
+	public string VideoCode { get; set; } = "";
+
+	[Parameter] 
+	public EventCallback<string> GetSearchTerm { get; set; }
+
+	[Parameter]
+	public EventCallback SetNewVideo { get; set; }
+
+	private YoutubePlayer? PlayerReference { get; set; }
+	private TaskTimerComponent? TimerReference { get; set; }
+
+	private bool IsPlaying = false;
+
+	public async Task LoadNewVideo(string code)
+	{
+		if (PlayerReference != null && TimerReference != null)
+		{
+			await PlayerReference.LoadNewVideo(code);
+			if (!TimerReference.IsCounting)
+			{
+				await TimerReference.StartTimer();
+			}
+		}
+	}
+
+	private async Task StartTimerAndVideo()
+	{
+		IsPlaying = true;
+
+		if (PlayerReference != null && TimerReference != null)
+		{
+			await PlayerReference.Play();
+			await TimerReference.StartTimer();
+		}
+	}
+
+	private async Task PauseTimerAndVideo()
+	{
+		IsPlaying = false;
+		if (PlayerReference != null && TimerReference != null)
+		{
+			await PlayerReference.Pause();
+			await TimerReference.StopTimer();
+		}
+	}
+
+	private async Task ResetTimer()
+	{
+		if (TimerReference != null)
+		{
+			await TimerReference.Dispose();
+		}
+	}
+
+	private async Task ResetVideo()
+	{
+		if (PlayerReference != null)
+		{
+			await PlayerReference.ResetTime();
+		}
+	}
+
+	private async Task SaveTask()
+	{
+		Console.WriteLine("Attempting to save task");
+		if (PlayerReference == null && TimerReference == null) return;
+
+		Console.WriteLine("Checking if playing ");
+		if (IsPlaying) return;
+
+		Console.WriteLine("Saving Task to DB");
+		await TimerReference.SaveTaskTime();
+	}
+}
