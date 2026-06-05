@@ -74,6 +74,7 @@
 			if (!TimerReference.IsCounting)
 			{
 				await TimerReference.StartTimer();
+				IsPlaying = true;
 			}
 		}
 	}
