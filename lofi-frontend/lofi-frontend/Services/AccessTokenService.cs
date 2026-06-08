@@ -1,11 +1,12 @@
 ﻿using System.Net;
+using lofi_frontend.Services;
 
-namespace TokenPractice.Services;
+namespace lofi_frontend.Services;
 
 public class AccessTokenService
 {
     private readonly CookieService _cookieService;
-    private readonly string _tokenKey = "access_token";
+    private readonly string _tokenKey = "jwt";
 
     public AccessTokenService(CookieService cookieService)
     {
@@ -16,8 +17,7 @@ public class AccessTokenService
     {
         await _cookieService.Set(_tokenKey, accessToken, 1);
     }
-
-
+    
     public async Task<string> GetToken()
     {
         return await _cookieService.Get(_tokenKey);

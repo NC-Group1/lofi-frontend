@@ -1,12 +1,13 @@
-﻿@using System.Net
-@using Microsoft.AspNetCore.Components.WebAssembly.Http
-@using lofi_frontend.Models
-@using TokenPractice.Services
+﻿@using lofi_frontend.Models
+@using lofi_frontend.Security
+@using lofi_frontend.Services
 @page "/Login"
 
 @rendermode InteractiveServer
 
+@inject IHttpClientFactory HttpClientFactory
 @inject AuthService AuthService
+@inject JWTAuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
 
 <div class="login-page">
@@ -81,7 +82,7 @@
 	protected override void OnInitialized()
 	{
 		EditContext = new EditContext(LoginForm);
-		HttpClient = new HttpClient { BaseAddress = new Uri(NavigationManager.BaseUri) };
+		HttpClient = HttpClientFactory.CreateClient("BackendApi");
 	}
 
 	private async Task HandleSignIn()
@@ -102,9 +103,11 @@
 	private async Task GetUserInfo()
 	{
 		Console.WriteLine("Getting user data from backend");
+		if (HttpClient == null) throw new InvalidOperationException();
 
+		Console.WriteLine($"Base Address: {HttpClient.BaseAddress}");
 		var responseForUserData = 
-			await HttpClient.GetAsync(HttpClient.BaseAddress + "/users");
+			await HttpClient.GetAsync(HttpClient.BaseAddress + "users/all");
 		Console.WriteLine(await responseForUserData.Content.ReadAsStringAsync());
 
 		if (!responseForUserData.IsSuccessStatusCode) 
@@ -125,14 +128,16 @@
 	private async Task AuthenticateUser()
 	{
 		_errorMessage = null;
-		Console.WriteLine("Attempting to sign in user: " + LoginForm?.Username);
+		Console.WriteLine("Attempting to sign in user: " + LoginForm.Username);
 		try
 		{
-			var response = await AuthService.Login(
-				Request.Email, Request.Password);
+			var response = await AuthService.Login(Request.Email, Request.Password);
+			Console.WriteLine("Login response: " + response);
+			
 			if (response)
 			{
-				NavigationManager.NavigateTo("/Dashboard");
+				AuthStateProvider.NotifyUserLogin();
+				NavigationManager.NavigateTo("/Dashboard/user/studyowl", forceLoad: true);
 			} else Console.WriteLine("Failed to login");
 		}
 		catch (Exception ex)

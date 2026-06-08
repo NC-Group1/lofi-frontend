@@ -5,14 +5,14 @@
 
 <PageTitle>User Dashboard</PageTitle>
 <div class="page-container dashboard-page">
-<DashboardElements />
+<DashboardElements User="@User" UserId="@User.Id" />
 </div>
 
 @code {
     [Parameter]
     public string Username { get; set; } = string.Empty;
-    [Parameter]
-    public UserData User { get; set; } = new UserData
+
+    [Parameter] public UserData User { get; set; } = new()
     {
         Id = "test1",
         FirstName = "Emma",

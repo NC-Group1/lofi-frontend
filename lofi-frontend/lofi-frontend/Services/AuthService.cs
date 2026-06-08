@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Components;
 
-namespace TokenPractice.Services;
+namespace lofi_frontend.Services;
 
 public class AuthService
 {
@@ -21,17 +22,28 @@ public class AuthService
 
     public async Task<bool> Login(string email, string password)
     {
-        var status = await _client.PostAsJsonAsync("auth/login", new { email, password });
+        Console.WriteLine("Making login request");
+        var status = await _client.PostAsJsonAsync(
+            "Auth/sign-in", new { email, password });
         if (!status.IsSuccessStatusCode) return false;
         
-        var token = await status.Content.ReadFromJsonAsync<AuthResponse>();
-        if (token?.AccessToken is not null) await _ats.SetToken(token.AccessToken);
+        Console.WriteLine($"Login successful: {await status.Content.ReadAsStringAsync()}");
+        
+        var token = await status.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+        if (token is null) return false;
+        Console.WriteLine($"Token: {token["accessToken"]}");
+
+        if (!string.IsNullOrWhiteSpace(token["accessToken"])) 
+            await _ats.SetToken(token["accessToken"]);
+        else return false;
+        Console.WriteLine("Token set");
         return true;
     }
 }
 
 public class AuthResponse
 {
-    public string AccessToken { get; set; }
-    public string TokenType { get; set; }
+    public string AccessToken { get; init; } = "";
+    
+    public string RefreshToken { get; } = "";
 }

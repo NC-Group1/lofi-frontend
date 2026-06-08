@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.74.0.4162" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
-    <ProjectReference Include="..\lofi-frontend.Client\lofi-frontend.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.27" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.27" />
   </ItemGroup>

@@ -4,7 +4,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
-namespace TokenPractice.Security;
+namespace lofi_frontend.Security;
 
 public class JwtAuthenticationHandler : AuthenticationHandler<CustomOption>
 {
@@ -17,28 +17,21 @@ public class JwtAuthenticationHandler : AuthenticationHandler<CustomOption>
     {
         try
         {
-            try
-            {
-                var token = Request.Cookies["access_token"];
-                if (string.IsNullOrEmpty(token))
-                    return Task.FromResult(AuthenticateResult.NoResult());
-            
-                var readJwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-                var identity = new ClaimsIdentity(readJwt.Claims, "JWT");
-                var principal = new ClaimsPrincipal(identity);       
-            
-                var ticket = new AuthenticationTicket(principal, Scheme.Name);
-            
-                return Task.FromResult(AuthenticateResult.Success(ticket));
-            }
-            catch (Exception e)
-            {
+            var token = Request.Cookies["jwt"];
+            if (string.IsNullOrEmpty(token))
                 return Task.FromResult(AuthenticateResult.NoResult());
-            }
+
+            var readJwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var identity = new ClaimsIdentity(readJwt.Claims, "JWT");
+            var principal = new ClaimsPrincipal(identity);
+
+            var ticket = new AuthenticationTicket(principal, Scheme.Name);
+
+            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
-        catch (Exception exception)
+        catch (Exception e)
         {
-            return Task.FromException<AuthenticateResult>(exception);
+            return Task.FromResult(AuthenticateResult.NoResult());
         }
     }
 

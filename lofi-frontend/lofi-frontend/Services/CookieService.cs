@@ -1,28 +1,28 @@
 ﻿using Microsoft.JSInterop;
 
-namespace TokenPractice.Services;
+namespace lofi_frontend.Services;
 
 public class CookieService
 {
-    private readonly IJSRuntime js;
+    private readonly IJSRuntime _js;
 
     public CookieService(IJSRuntime jsRuntime)
     {
-        js = jsRuntime;
+        _js = jsRuntime;
     }
 
     public async Task<string> Get(string key)
     {
-        return await js.InvokeAsync<string>("getCookie", key);
+        return await _js.InvokeAsync<string>("getCookie", key);
     }
 
     public async Task Remove(string key)
     {
-        await js.InvokeVoidAsync("deleteCookie", key);
+        await _js.InvokeVoidAsync("deleteCookie", key);
     }
 
     public async Task Set(string key, string value, int days)
     {
-        await js.InvokeVoidAsync("setCookie", key, value);
+        await _js.InvokeVoidAsync("setCookie", key, value);
     }
 }

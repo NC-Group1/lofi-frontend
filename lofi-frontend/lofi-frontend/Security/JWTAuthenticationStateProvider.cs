@@ -1,9 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
-using TokenPractice.Services;
+using lofi_frontend.Services;
 
-namespace TokenPractice.Security;
+namespace lofi_frontend.Security;
 
 public class JWTAuthenticationStateProvider : AuthenticationStateProvider
 {
@@ -24,7 +24,7 @@ public class JWTAuthenticationStateProvider : AuthenticationStateProvider
             }
 
             var readJwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            var identity = new ClaimsIdentity(readJwt.Claims, "JWT");
+            var identity = new ClaimsIdentity(readJwt.Claims, "jwt");
             var principal = new ClaimsPrincipal(identity);
             
             return await Task.FromResult(new AuthenticationState(principal));
@@ -33,6 +33,11 @@ public class JWTAuthenticationStateProvider : AuthenticationStateProvider
         {
             return await MarkAsUnAuthorised();
         }
+    }
+
+    public void NotifyUserLogin()
+    {
+        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
     private async Task<AuthenticationState> MarkAsUnAuthorised()
