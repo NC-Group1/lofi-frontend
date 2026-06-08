@@ -1,6 +1,7 @@
 ﻿@using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
-@inject HttpClient httpClient
+
+@inject IHttpClientFactory HttpClientFactory
 
 <div class="dashboard-layout">
     
@@ -73,11 +74,11 @@
 
 
 @code {
-    [Parameter]
-    public string UserId { get; set; }
-    
-    [Parameter]
-    public UserData User { get; set; } = new UserData
+	[Parameter]
+	public string UserId { get; set; }
+
+	[Parameter]
+	public UserData User { get; set; } = new UserData
         {
             Id = "test1",
             FirstName = "Emma",
@@ -89,20 +90,20 @@
             Playlists = new List<Playlist>()
         };
 
-    public HttpClient? httpClient = new();
+	public HttpClient httpClient = new();
 
-    private string selectedSection = "";
+	private string selectedSection = "";
 
-    private string? errorMessage;
-    private List<Project> projects = new();
-    private List<Playlist> playlists = new();
-    private List<Music> faveTracks = new();
-    private List<TaskTimer> timerList = new();
+	private string? errorMessage;
+	private List<Project> projects = new();
+	private List<Playlist> playlists = new();
+	private List<Music> faveTracks = new();
+	private List<TaskTimer> timerList = new();
 
-    protected override void OnInitialized()
-    {
-        httpClient = httpClientFactory.CreateClient("BackendApi");
-    }
+	protected override void OnInitialized()
+	{
+		httpClient = HttpClientFactory.CreateClient("BackendApi");
+	}
 
     private async Task ShowProjects()
     {
@@ -111,7 +112,7 @@
             selectedSection = "projects";
 
             projects = await httpClient.GetFromJsonAsync<List<Project>>($"https://localhost:7245/projects");
-            projects = projects.FindAll(project => project.UserId == User.Id).ToList();
+            projects = projects?.FindAll(project => project.UserId == User.Id).ToList();
 
         }
         catch(Exception ex)

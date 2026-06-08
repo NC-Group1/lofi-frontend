@@ -1,4 +1,10 @@
-﻿@attribute [Authorize]
+﻿@using lofi_frontend.Security
+@using lofi_frontend.Services
+@attribute [Authorize]
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+@inject JWTAuthenticationStateProvider AuthStateProvider
 
 <nav class="navbar navbar-light p-0" aria-label="Main Navigation">
     <div class="container-fluid">
@@ -32,3 +38,12 @@
         </ul>
     </div>
 </nav>
+
+@code {
+    public HttpClient client = new();
+
+    protected override void OnInitialized()
+    {
+        client = HttpClientFactory.CreateClient("BackendApi");
+    }
+}
