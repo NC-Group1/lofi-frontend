@@ -1,10 +1,17 @@
-﻿@attribute [Authorize]
+﻿@using lofi_frontend.Security
+@using lofi_frontend.Services
+@attribute [Authorize]
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+@inject JWTAuthenticationStateProvider AuthStateProvider
 
 <nav class="navbar navbar-light p-0" aria-label="Main Navigation">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">
             <img src="./images/CalicoLogo.png" alt="Logo image of calico cat" height="60"/>
         </a>
+            @* <h1 class="text-white ps-5 ms-5" aria-hidden="true;">Calico</h1> *@
 
         <ul class="navbar-nav nav-links">
             <li><NavLink class="button-nav" href="/">Home</NavLink></li>
@@ -31,3 +38,12 @@
         </ul>
     </div>
 </nav>
+
+@code {
+    public HttpClient client = new();
+
+    protected override void OnInitialized()
+    {
+        client = HttpClientFactory.CreateClient("BackendApi");
+    }
+}

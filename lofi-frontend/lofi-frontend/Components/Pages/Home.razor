@@ -1,31 +1,35 @@
-﻿@page "/"
-@using lofi_frontend.Components.MusicPlayer
+﻿@using lofi_frontend.Components.MusicPlayer
 @using lofi_frontend.Components.Pages.Search
 @using lofi_frontend.Models
+@page "/"
 
 @inject IHttpClientFactory ClientFactory;
 
 <PageTitle>Calico LoFi</PageTitle>
 
 <div class="home-page page-container">
-	<div class="home-layout">
-		<div class="d-flex flex-column">			
-			<MusicPlayerComponent 
-				@ref="MusicPlayerRef" 
-				VideoCode="@_videoCode" 
-				GetSearchTerm="GetSearchTerm"
-				/>
+	<div class="home-layout col-12 col-lg-10 col-xl-8 col-xxl-7">
+		<div class="welcome-message">
+			<h1 class="text-white text-shadow-lg">Welcome to Calico</h1>
+			<p>
+				Calico is a lo‑fi beats player and time tracker, relax to some chilled out music
+				and let yourself enter the flow state, but fret not, you will be tracking
+			</p>
+		</div>
+
+		<div class="home-card">
+			<MusicPlayerComponent @ref="MusicPlayerRef"
+								  VideoCode="@_videoCode"
+								  GetSearchTerm="GetSearchTerm" />
 		</div>
 
 		<div class=" featured-moods-section home-card">
 			@* <h3>Results</h3> *@
 
-		<SearchField GetSearchTerm="GetSearchTerm"/>
-			<SearchList 
-				@ref="SearchResultRef" 
-				YoutubeVideos="YoutubeVideos"
-				GetVideoCode="GetVideoCode"
-				/>
+			<SearchField GetSearchTerm="GetSearchTerm" />
+			<SearchList @ref="SearchResultRef"
+						YoutubeVideos="YoutubeVideos"
+						GetVideoCode="GetVideoCode" />
 
 		</div>
 	</div>

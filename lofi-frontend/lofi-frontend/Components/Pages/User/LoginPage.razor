@@ -92,6 +92,9 @@
 		{
 			await GetUserInfo();
 			await AuthenticateUser();
+			AuthStateProvider.NotifyUserLogin();
+			NavigationManager.NavigateTo("/");
+			NavigationManager.NavigateTo($"/Dashboard/user/studyowl", forceLoad: true);
 		}
 		catch (Exception ex)
 		{
@@ -133,11 +136,11 @@
 		{
 			var response = await AuthService.Login(Request.Email, Request.Password);
 			Console.WriteLine("Login response: " + response);
-			
+
 			if (response)
 			{
 				AuthStateProvider.NotifyUserLogin();
-				NavigationManager.NavigateTo("/Dashboard/user/studyowl", forceLoad: true);
+				Console.WriteLine("User logged in, navigating to dashboard");
 			} else Console.WriteLine("Failed to login");
 		}
 		catch (Exception ex)

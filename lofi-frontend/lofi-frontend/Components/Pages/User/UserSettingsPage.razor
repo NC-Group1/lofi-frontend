@@ -4,6 +4,7 @@
 @rendermode InteractiveServer
 @using lofi_frontend.Components.Pages
 
+<PageTitle>Settings</PageTitle>
 <div class="settings-page">
 	<div class="settings-layout">
 
@@ -17,13 +18,12 @@
 		</nav>
 
 
-		<section class="settings-content d-flex flex-column justify-content-top align-items-center" aria-labelledby="settings-heading">
+		<section class="settings-content d-flex flex-column justify-content-top align-items-center px-5" aria-labelledby="settings-heading">
 
-			<h1 id="settings-heading" class="text-center mb-4">Settings</h1>
+			@* <h1 id="settings-heading" class="text-center mb-4">Settings</h1> *@
 			@if (selectedSection == "")
 			{
 				<UserUpdatePasswordPage />
-
 			}
 			@if (selectedSection == "ChangePassword")
 			{
