@@ -2,9 +2,9 @@
 <div class="project-card">
 
     <h4>@Project.Name</h4>
-    <h4>@Project.StartDate</h4>
-    <h4>@Project.EndDate</h4>
-    <h4>@Project.Timers</h4>
+    <h4>Start: @Project.StartDate.ToShortDateString() @Project.StartDate.ToShortTimeString()</h4>
+    <h4>End: @Project.EndDate.ToShortDateString() @Project.EndDate.ToShortTimeString()</h4>
+    @* <h4>@Project.Timers.ForEach(t => t.IsActive.ToString())</h4> *@
 </div>
 
 @code {

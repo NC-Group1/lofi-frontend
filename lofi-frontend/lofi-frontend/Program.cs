@@ -19,7 +19,6 @@ namespace lofi_frontend
             builder.Services.AddHttpClient("BackendApi", client => {
                 client.BaseAddress = new Uri("https://localhost:7245/");
             });
-            ;
 
             builder.Services.AddAuthorization();
             builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();

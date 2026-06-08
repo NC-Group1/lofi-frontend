@@ -2,19 +2,27 @@
 @using lofi_frontend.Components.MusicPlayer
 @using lofi_frontend.Components.Pages.Search
 @using lofi_frontend.Models
-@using System.Text.RegularExpressions
 
 @inject IHttpClientFactory clientFactory;
 
 @rendermode InteractiveServer
 
-<PageTitle>Calico LoFi</PageTitle>
+<PageTitle>Calico</PageTitle>
+
 
 <div class="home-page page-container">
-	<div class="home-layout">
-		<div class="d-flex flex-column">			
-			<MusicPlayerComponent 
-				@ref="MusicPlayerRef" 
+	<div class="home-layout col-xl-8 col-xxl-8">
+		<div class="welcome-message">
+			<h1 class="text-white text-shadow-lg">Welcome to Calico</h1>
+			<p>
+				Calico blends lo‑fi beats, timers, and
+				project tracking into a single distraction‑free
+				space that helps you work with clarity and rhythm.
+			</p>
+		</div>
+
+		<div class="home-card">
+			<MusicPlayerComponent @ref="MusicPlayerRef"
 				VideoCode="@VideoCode" 
 				GetSearchTerm="GetSearchTerm"
 				/>
@@ -78,6 +86,7 @@
 		try
 		{
 			errorMessage = null;
+
 			Console.WriteLine("Creating request");
 
 			var request = new HttpRequestMessage(

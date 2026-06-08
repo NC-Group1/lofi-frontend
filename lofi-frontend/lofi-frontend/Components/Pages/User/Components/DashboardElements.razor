@@ -1,6 +1,9 @@
 ﻿@using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
-@inject HttpClient httpClient
+@using lofi_frontend.Components.Pages.User.Components
+
+
+@inject IHttpClientFactory httpClientFactory
 @rendermode InteractiveServer
 
 
@@ -20,7 +23,7 @@
             </NavLink>
         </div>
 
-        <nav class="sidebar-buttons">
+        <nav class="sidebar-buttons pt-2">
             <button class="project-button"
                     aria-current="@(selectedSection == "projects" ? "page" : null)"
                     @onclick="ShowProjects">Projects
@@ -44,7 +47,7 @@
             </div> *@
 
             <div class="stat-item">
-                <h3 class="stat-label">Projects</h3>
+                <span class="stat-label">Projects</span>
                 <span class="stat-value">@projects.Count</span>
             </div>
         </section>
@@ -52,7 +55,7 @@
     <div class="content">
         @if(selectedSection == "")
         {
-            <h1 class="dashboard-title">@User.FirstName's Dashboard</h1>
+            <h1 class="dashboard-title ps-5 pt-4">@User.FirstName's Dashboard</h1>
         }
         @if(selectedSection == "projects")
         {
@@ -67,10 +70,10 @@
             <FaveTracksSummaryList Musics="@faveTracks" />
         }
     </div>
-    @if (!string.IsNullOrEmpty(errorMessage))
+    @* @if (!string.IsNullOrEmpty(errorMessage))
     {
         <p aria-live="assertive" role="alert">@errorMessage</p>
-    }
+    } *@
 </div>
 
 
@@ -90,6 +93,8 @@
             Playlists = new List<Playlist>()
         };
 
+    public HttpClient? httpClient = new();
+
     private string selectedSection = "";
 
     private string? errorMessage;
@@ -97,12 +102,19 @@
     private List<Playlist> playlists = new();
     private List<Music> faveTracks = new();
     private List<TaskTimer> timerList = new();
+
+    protected override void OnInitialized()
+    {
+        httpClient = httpClientFactory.CreateClient("BackendApi");
+    }
+
     private async Task ShowProjects()
     {
         try
         {
             selectedSection = "projects";
-            projects = await httpClient.GetFromJsonAsync<List<Project>>($"/projects");
+
+            projects = await httpClient.GetFromJsonAsync<List<Project>>($"https://localhost:7245/projects");
             projects = projects.FindAll(project => project.UserId == User.Id).ToList();
 
         }

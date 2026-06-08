@@ -6,6 +6,8 @@
 
 @inject IHttpClientFactory clientFactory
 @inject NavigationManager NavigationManager;
+
+<PageTitle>Login</PageTitle>
 <div class="login-page">
 	<div class="login-layout">
 		<div class="container-fluid d-flex justify-content-center align-items-start">
@@ -13,7 +15,7 @@
 
 				<h1 class="text-center h4 mb-4">Log in to your account</h1>
 
-				<EditForm EditContext="editContext" OnValidSubmit="AuthenticateUser" FormName="Login Form">
+				<EditForm EditContext="editContext" OnValidSubmit="HandleSignIn" FormName="Login Form">
 					<DataAnnotationsValidator />
 
 					<div class="mb-3">
@@ -83,8 +85,9 @@
 		Console.WriteLine("Attempting to log in user");
 		try
 		{
-			await GetUserInfo();
-			await AuthenticateUser();
+			// await GetUserInfo();
+			// await AuthenticateUser();
+			NavigationManager.NavigateTo($"/Dashboard/user/studyowl");
 		}
 		catch (Exception ex)
 		{
@@ -143,7 +146,6 @@
 			}
 
 			Console.WriteLine(await responseForAuth.Content.ReadAsStringAsync());
-			NavigationManager.NavigateTo($"/Dashboard");
 		}
 		catch (Exception ex)
 		{
