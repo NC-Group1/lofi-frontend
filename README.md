@@ -4,7 +4,12 @@
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/Language-C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
 ![Razor Components](https://img.shields.io/badge/Frontend-Razor_Components-000000?style=for-the-badge)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![YouTube API](https://img.shields.io/badge/YouTube_API-FF0000?style=for-the-badge&logo=youtube&logoColor=white)
+
+
 
 Calico is a Blazor-based LoFi music and productivity platform built as part of a full‑stack group project.  
 It blends **music discovery**, **playlist management**, **productivity tools**, and **dashboard summaries** into a single responsive UI.
@@ -47,6 +52,17 @@ The main goals of Calico were to:
 - Create a realistic product experience around music and productivity.
 - Demonstrate professional structure, collaboration, and implementation quality.
 
+## ♿ Accessibility
+
+The frontend implements WCAG‑aligned accessibility features, including:
+
+- Full keyboard navigation across interactive components  
+- Semantic HTML structure for screen‑reader support  
+- ARIA labels for buttons, menus, and media controls  
+- Clear focus states and logical tab order  
+
+These improvements ensure the Blazor UI is accessible and inclusive for all users.
+
 # 🎵 Current Features
 ## Music Discovery
 * Search and browse LoFi tracks.
@@ -79,6 +95,7 @@ The main goals of Calico were to:
 * Favourite tracks summary.
 * Filter music by mood.
 * Build progress bar component
+* Pomodoro Timer
 
 
 # 🏗️ Architecture
@@ -114,18 +131,3 @@ The project was shaped using the following design and planning tools:
 * **UI / Visual Design:** [Canva Design](https://www.canva.com/design/DAHKxr2OHTw/RWMN95CV9L4hIf7RgaVTPQ/edit)
 
 These documents capture the early product thinking, feature planning, and technical system design behind Calico.
-
-# 📁 Project Structure
-Only the key folders are listed here to keep the README focused.
-
-```text
-lofi_frontend
-├── Components
-├── Client/Pages
-├── Models
-├── Properties
-├── wwwroot
-├── Program.cs
-├── appsettings.json
-└── appsettings.Development.json
-```

@@ -1,7 +1,6 @@
 ﻿@using System.Reflection.Metadata
 @using lofi_frontend.Models
 @using lofi_frontend.Models.Enum
-@using Microsoft.AspNetCore.Components.WebAssembly.Http
 @page "/Signup"
 
 @rendermode InteractiveServer
@@ -176,8 +175,6 @@
 			{
 				Content = JsonContent.Create(user)
 			};
-
-			request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
 
 			var response = await HttpClient.SendAsync(request);
 

@@ -1,7 +1,7 @@
-using lofi_frontend.Client;
-using lofi_frontend.Client.Pages;
 using lofi_frontend.Components;
+using lofi_frontend.Security;
 using Microsoft.AspNetCore.Components.Authorization;
+using lofi_frontend.Services;
 
 namespace lofi_frontend
 {
@@ -16,12 +16,38 @@ namespace lofi_frontend
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
-            builder.Services.AddHttpClient("BackendApi", client => {
+            builder.Services.AddHttpClient("BackendApi", client =>
+            {
                 client.BaseAddress = new Uri("https://localhost:7245/");
+            }).ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                var handler = new HttpClientHandler();
+
+                // ONLY do this in development environments!
+                if (builder.Environment.IsDevelopment())
+                {
+                    handler.ServerCertificateCustomValidationCallback =
+                        (message, cert, chain, errors) => true;
+                }
+
+                return handler;
             });
 
+            builder.Services.AddScoped<CookieService>();
+            builder.Services.AddScoped<AccessTokenService>();
+            builder.Services.AddScoped<AuthService>();
+            
             builder.Services.AddAuthorization();
-            builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "JwtAuth";
+                options.DefaultChallengeScheme = "JwtAuth";
+                options.DefaultSignInScheme = "JwtAuth";
+            }).AddScheme<CustomOption, JwtAuthenticationHandler>(
+                "JwtAuth", options => { });
+            
+            builder.Services.AddScoped<JWTAuthenticationStateProvider>();
+            builder.Services.AddCascadingAuthenticationState();
 
             var app = builder.Build();
 
@@ -42,10 +68,12 @@ namespace lofi_frontend
             app.UseStaticFiles();
             app.UseAntiforgery();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
-                .AddInteractiveWebAssemblyRenderMode()
-                .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
+                .AddInteractiveWebAssemblyRenderMode();
 
             app.Run();
         }

@@ -3,14 +3,17 @@
 @using lofi_frontend.Components.Pages.Search
 @using lofi_frontend.Models
 
-@inject IHttpClientFactory clientFactory;
+@inject IHttpClientFactory ClientFactory;
 
-@rendermode InteractiveServer
-
-<PageTitle>Calico</PageTitle>
+<PageTitle>Calico LoFi</PageTitle>
 
 
 <div class="home-page page-container">
+	<div class="home-layout">
+		<div class="d-flex flex-column">			
+			<MusicPlayerComponent 
+				@ref="MusicPlayerRef" 
+				VideoCode="@_videoCode" 
 	<div class="home-layout col-xl-8 col-xxl-8">
 		<div class="welcome-message">
 			<h1 class="text-white text-shadow-lg">Welcome to Calico</h1>
@@ -35,26 +38,27 @@
 			<SearchList 
 				@ref="SearchResultRef" 
 				YoutubeVideos="YoutubeVideos"
-				GetVideoCode="GetVideoCode"/>
+				GetVideoCode="GetVideoCode"
+				/>
 
 		</div>
 	</div>
 </div>
 
 @code {
-	private string VideoCode = "n61ULEU7CO0";
+	private string _videoCode = "n61ULEU7CO0";
 	private string SearchTerm { get; set; } = "";
-	private string? errorMessage { get; set; }
+	private string? ErrorMessage { get; set; }
 	private List<Music>? YoutubeVideos { get; set; }
 
-	private HttpClient httpClient { get; set; } = new();
+	private HttpClient HttpClient { get; set; } = new();
 
 	private MusicPlayerComponent? MusicPlayerRef { get; set; }
 	private SearchList? SearchResultRef { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
-		clientFactory.CreateClient("BackendApi");
+		ClientFactory.CreateClient("BackendApi");
 		await GetVideo();
 	}
 
@@ -63,10 +67,10 @@
 		if (MusicPlayerRef != null)
 		{
 			Console.WriteLine("Getting video code to change video");
-			VideoCode = videoCode[^11..];
+			_videoCode = videoCode[^11..];
 			// VideoCode = "n61ULEU7CO0";
-			Console.WriteLine($"Code: {VideoCode}");
-			await MusicPlayerRef.LoadNewVideo(VideoCode);
+			Console.WriteLine($"Code: {_videoCode}");
+			await MusicPlayerRef.LoadNewVideo(_videoCode);
 			await InvokeAsync(StateHasChanged);
 		}
 	}
@@ -85,8 +89,7 @@
 		Console.WriteLine("attempting to search for videos");
 		try
 		{
-			errorMessage = null;
-
+			ErrorMessage = null;
 			Console.WriteLine("Creating request");
 
 			var request = new HttpRequestMessage(
@@ -95,14 +98,14 @@
 
 			Console.WriteLine($"Request Info: URL {request.RequestUri}");
 
-			var response = await httpClient.SendAsync(request);
+			var response = await HttpClient.SendAsync(request);
 
 			YoutubeVideos = await response.Content.ReadFromJsonAsync<List<Music>>();
 
 		}
         catch (Exception ex)
         {
-            errorMessage = $"Could not load videos: {ex.Message}";
+            ErrorMessage = $"Could not load videos: {ex.Message}";
             YoutubeVideos = new List<Music>();
         }
     }
