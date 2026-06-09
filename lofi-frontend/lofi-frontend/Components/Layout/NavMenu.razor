@@ -15,25 +15,27 @@
 
         <ul class="navbar-nav nav-links">
             <li><NavLink class="button-nav" href="/">Home</NavLink></li>
-            <li>
                 <AuthorizeView>
                     <Authorized>
-                        <NavLink
-                            class="button-nav"
-                            href="/Dashboard/user/studyowl">
-                            Profile
-                        </NavLink>
-                        <NavLink
-                            class="button-nav"
-                            href="/Logout">
-                            Logout
-                        </NavLink>
+                        <li>
+                            <NavLink
+                                class="button-nav"
+                                href="/Dashboard/user/studyowl">
+                                Profile
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                class="button-nav"
+                                href="/">
+                                Logout
+                            </NavLink>
+                            </li>
                     </Authorized>
                     <NotAuthorized>
                         <li><NavLink class="button-nav" href="/Login">Login</NavLink></li>
                     </NotAuthorized>
                 </AuthorizeView>
-            </li>
             @* <li><NavLink class="button-nav" href="/Search">Search</NavLink></li> *@
         </ul>
     </div>
