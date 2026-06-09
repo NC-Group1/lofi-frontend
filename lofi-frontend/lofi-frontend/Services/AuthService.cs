@@ -39,6 +39,11 @@ public class AuthService
         Console.WriteLine("Token set");
         return true;
     }
+
+    // public async Task<bool> Logout()
+    // {
+    //     var status = await _client.PostAsync()
+    // }
 }
 
 public class AuthResponse

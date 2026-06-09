@@ -49,20 +49,19 @@
         </section>
     </aside>
     <div class="content">
-        @if(selectedSection == "")
-        {
-            <h1 class="dashboard-title ps-5 pt-4">@User.FirstName's Dashboard</h1>
-        }
         @if(selectedSection == "projects")
         {
+            <h4 class="ps-5 pt-5">Your Projects</h4>
             <ProjectsSummaryList Projects="@projects" />
         }
         @if(selectedSection == "playlists")
         {
+            <h4 class="ps-5 pt-5">Your Playlists</h4>
             <PlaylistsSummaryList Playlists="@playlists" />
         }
         @if(selectedSection == "faveTracks")
         {
+            <h4 class="ps-5 pt-5">Your Tracks</h4>
             <FaveTracksSummaryList Musics="@faveTracks" />
         }
     </div>
@@ -92,7 +91,7 @@
 
 	public HttpClient httpClient = new();
 
-	private string selectedSection = "";
+	private string selectedSection = "projects";
 
 	private string? errorMessage;
 	private List<Project> projects = new();
@@ -100,10 +99,11 @@
 	private List<Music> faveTracks = new();
 	private List<TaskTimer> timerList = new();
 
-	protected override void OnInitialized()
-	{
+    protected override async Task OnInitializedAsync()
+    {
 		httpClient = HttpClientFactory.CreateClient("BackendApi");
-	}
+        await ShowProjects();
+    }
 
     private async Task ShowProjects()
     {
